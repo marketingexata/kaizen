@@ -1,0 +1,244 @@
+<!DOCTYPE html>
+<html lang="id"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Kaizen</title>
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:wght@500;700;800&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+<script src="https://accounts.google.com/gsi/client" async defer></script>
+<style>
+:root{--ink:#14213d;--mut:#6b7691;--bg:#f6f8ff;--line:#e3e8f6;--blue:#3a5bff;--plan:#e4eaff;--prog:#fff1c2;--hold:#ffdede;--done:#d5f5e9}
+*{box-sizing:border-box;margin:0}body{font:15px/1.5 Inter,sans-serif;color:var(--ink);background:var(--bg)}
+h1,h2,h3,.tab{font-family:'Bricolage Grotesque',sans-serif}button,input,select,textarea{font:inherit;color:inherit}
+.hide{display:none!important}
+header{position:sticky;top:0;z-index:5;background:#fffffff2;backdrop-filter:blur(8px);border-bottom:1px solid var(--line);display:flex;align-items:center;gap:16px;padding:10px 20px;flex-wrap:wrap}
+header h1{font-size:24px;font-weight:800;letter-spacing:-.5px}.sp{flex:1}
+.tabs{display:flex;gap:4px;background:var(--bg);padding:4px;border-radius:99px}
+.tab{border:0;background:none;padding:8px 18px;border-radius:99px;cursor:pointer;font-weight:700;color:var(--mut);transition:.25s}
+.tab.on{background:var(--blue);color:#fff}
+.av{width:38px;height:38px;border-radius:50%;object-fit:cover;background:var(--plan);display:grid;place-items:center;font-weight:700;color:var(--blue);cursor:pointer;overflow:hidden;flex:none}
+main{max-width:1100px;margin:auto;padding:24px 20px 90px}
+.bar{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:20px;align-items:center}
+.bar>*{padding:9px 12px;border:1px solid var(--line);border-radius:12px;background:#fff;min-width:0}
+.bar input[type=search]{flex:1;min-width:160px}
+.btn{border:0;background:var(--blue);color:#fff;font-weight:600;padding:10px 18px;border-radius:12px;cursor:pointer;transition:.2s}
+.btn:hover{transform:translateY(-1px);box-shadow:0 6px 16px #3a5bff40}.btn.g{background:#fff;color:var(--ink);border:1px solid var(--line)}.btn[disabled]{background:#c9cfe2;transform:none;box-shadow:none;cursor:default}
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(290px,1fr));gap:16px}
+.card{border-radius:20px;padding:18px;cursor:pointer;transition:.25s;display:flex;flex-direction:column;gap:10px;border:1px solid #0000000a}
+.card:hover{transform:translateY(-3px);box-shadow:0 12px 28px #14213d1a}
+.s-plan{background:var(--plan)}.s-progress{background:var(--prog)}.s-hold{background:var(--hold)}.s-done{background:var(--done)}
+.who{display:flex;gap:10px;align-items:center;font-size:13px}.who b{display:block;font-size:14px}
+.card h3{font-size:18px;line-height:1.2}.card p{color:#334;display:-webkit-box;-webkit-line-clamp:3;-webkit-box-orient:vertical;overflow:hidden}
+.meta{display:flex;justify-content:space-between;align-items:center;font-size:13px;color:var(--mut);margin-top:auto;gap:8px}
+.pill{background:#fff;padding:3px 10px;border-radius:99px;font-weight:600;color:var(--ink);font-size:12px}
+.tag{font-size:12px;font-weight:600;color:var(--blue)}
+.empty{text-align:center;color:var(--mut);padding:60px 0}
+.fab{position:fixed;right:20px;bottom:20px;box-shadow:0 10px 24px #3a5bff55;padding:14px 22px;z-index:4}
+.ov{position:fixed;inset:0;background:#14213d66;display:grid;place-items:center;z-index:20;padding:14px;opacity:0;pointer-events:none;transition:.25s}
+.ov.on{opacity:1;pointer-events:auto}
+.modal{background:#fff;border-radius:24px;padding:24px;width:min(640px,100%);max-height:92vh;overflow:auto;transform:translateY(20px) scale(.98);transition:.3s}
+.ov.on .modal{transform:none}
+.modal h2{font-size:26px;margin-bottom:14px}
+label{display:block;font-weight:600;font-size:13px;margin:12px 0 4px}
+.modal input:not([type=file]),.modal select,.modal textarea{width:100%;padding:10px 12px;border:1px solid var(--line);border-radius:12px;background:#fff}
+textarea{min-height:100px;resize:vertical}
+.two{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.ph{aspect-ratio:4/3;border:2px dashed var(--line);border-radius:14px;display:grid;place-items:center;color:var(--mut);cursor:pointer;background-size:cover;background-position:center;font-size:13px;text-align:center}
+.act{display:flex;gap:8px;justify-content:flex-end;margin-top:18px}
+.dr{font-size:12px;color:var(--mut);margin-top:8px}
+#login{min-height:100vh;display:grid;place-items:center;text-align:center;padding:20px}
+#login h1{font-size:clamp(44px,9vw,84px);line-height:.95;letter-spacing:-2px;font-weight:800;margin-bottom:14px}
+#login p{color:var(--mut);margin-bottom:26px}#gbtn{display:inline-block}
+#ld{position:fixed;inset:0;background:#fffffff0;z-index:50;display:grid;place-items:center;opacity:0;pointer-events:none;transition:.25s}
+#ld.on{opacity:1;pointer-events:auto}.lb{width:min(300px,80vw);text-align:center}
+.trk{height:10px;background:var(--plan);border-radius:9px;overflow:hidden;margin:14px 0 8px}
+#lf{height:100%;width:0;background:linear-gradient(90deg,var(--blue),#19c3a0);border-radius:9px;transition:width .2s}
+#lp{font:800 40px 'Bricolage Grotesque'}
+#toast{position:fixed;left:50%;bottom:28px;transform:translate(-50%,80px);background:var(--ink);color:#fff;padding:12px 20px;border-radius:12px;z-index:60;transition:.35s}
+#toast.on{transform:translate(-50%,0)}
+@media(max-width:640px){.two{grid-template-columns:1fr 1fr}.tabs{order:3;width:100%;overflow:auto}header{padding:10px 14px}}
+@media(prefers-reduced-motion:reduce){*{transition:none!important}}
+</style></head><body>
+
+<section id="login"><div><h1>Kaizen.<br>Perbaikan kecil,<br>dampak besar.</h1><p>Masuk dengan akun Google kamu untuk mulai.</p><div id="gbtn"></div></div></section>
+
+<div id="app" class="hide">
+<header><h1>Kaizen</h1>
+<nav class="tabs"><button class="tab" data-t="my">My Kaizen</button><button class="tab" data-t="all">All Kaizen</button><button class="tab" data-t="sy">Sayembara</button></nav>
+<span class="sp"></span><div class="av" id="me" title="My profile"></div></header>
+<main><div class="bar" id="bar"></div><div class="grid" id="grid"></div></main>
+<button class="btn fab" id="fab"></button>
+</div>
+
+<div class="ov" id="ov"><div class="modal" id="md"></div></div>
+<div id="ld"><div class="lb"><div id="lp">0%</div><div class="trk"><div id="lf"></div></div><b>Tunggu ya…</b><div id="lm" style="color:var(--mut);font-size:13px"></div></div></div>
+<div id="toast"></div>
+
+<script>
+/* ====== ISI 2 BARIS INI ====== */
+const API = 'https://script.google.com/macros/s/AKfycbz1Ue9agxvWivWpKjnbO1iNcNBoYanbHSw5nG7cQb9IavfhJdKnAHiPmzLdekHWWDYfgg/exec';
+const CLIENT_ID = '878805213448-c11oc0pbchh04lp123bjt640vf4erru7.apps.googleusercontent.com';
+/* Tambah kategori di sini */
+const CATS = ['Efisiensi biaya', 'Lingkungan', 'Kualitas', 'Keselamatan kerja'];
+const STAT = ['plan', 'progress', 'hold', 'done'];
+
+const $ = s => document.querySelector(s), E = s => String(s ?? '').replace(/[&<>"]/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]));
+let S = { tab: localStorage.kz_tab || 'my', tok: localStorage.kz_tok || '', me: null, users: [], kz: [], sy: [], f: {} };
+
+/* ---------- loader + api ---------- */
+let LT, LP = 0;
+const setP = p => { $('#lf').style.width = p + '%'; $('#lp').textContent = Math.round(p) + '%'; };
+function loader(on, msg) {
+  clearInterval(LT);
+  if (on) { LP = 0; setP(0); $('#lm').textContent = msg || ''; $('#ld').classList.add('on'); LT = setInterval(() => setP(LP += (92 - LP) * .06), 120); }
+  else { setP(100); setTimeout(() => $('#ld').classList.remove('on'), 250); }
+}
+function toast(t) { const e = $('#toast'); e.textContent = t; e.classList.add('on'); setTimeout(() => e.classList.remove('on'), 3000); }
+async function api(action, data, msg) {
+  loader(1, msg); let r;
+  try { r = await (await fetch(API, { method: 'POST', body: JSON.stringify({ action, token: S.tok, data }) })).json(); }
+  catch (e) { loader(0); toast('Koneksi gagal, coba lagi'); throw e; }
+  loader(0);
+  if (!r.ok) { toast(r.error); if (/token/i.test(r.error)) logout(); throw new Error(r.error); }
+  return r.data;
+}
+function apply(d) { S.me = d.me; S.users = d.users; S.kz = d.kaizen; S.sy = d.sayembara; }
+
+/* ---------- login ---------- */
+window.onload = () => {
+  const t = setInterval(() => {
+    if (!window.google) return; clearInterval(t);
+    google.accounts.id.initialize({ client_id: CLIENT_ID, callback: r => { S.tok = r.credential; localStorage.kz_tok = S.tok; boot(); } });
+    google.accounts.id.renderButton($('#gbtn'), { theme: 'outline', size: 'large', shape: 'pill', text: 'signin_with' });
+  }, 100);
+  if (S.tok) boot();
+};
+async function boot() {
+  try { apply(await api('load', {}, 'Mengambil data')); } catch (e) { return; }
+  $('#login').classList.add('hide'); $('#app').classList.remove('hide');
+  if (!S.me) return profile(true);
+  go();
+}
+function logout() { localStorage.removeItem('kz_tok'); location.reload(); }
+
+/* ---------- helpers ---------- */
+const U = e => S.users.find(u => u.email === e) || { nama: e, divisi: '', foto: '' };
+const avatar = (u, cls = '') => u.foto ? `<img class="av ${cls}" src="${E(u.foto)}">` : `<div class="av ${cls}">${E((u.nama || '?')[0]).toUpperCase()}</div>`;
+const fdate = d => d ? new Date(d + 'T00:00').toLocaleDateString('id-ID', { day: 'numeric', month: 'short', year: 'numeric' }) : '-';
+function img(file, max = 1000) {
+  return new Promise(res => {
+    const fr = new FileReader(); fr.onload = () => { const i = new Image(); i.onload = () => {
+      const k = Math.min(1, max / Math.max(i.width, i.height)), c = document.createElement('canvas'); c.width = i.width * k; c.height = i.height * k;
+      c.getContext('2d').drawImage(i, 0, 0, c.width, c.height); res(c.toDataURL('image/jpeg', .8)); }; i.src = fr.result; };
+    fr.readAsDataURL(file);
+  });
+}
+function modal(html) { $('#md').innerHTML = html; $('#ov').classList.add('on'); }
+function close_() { $('#ov').classList.remove('on'); }
+$('#ov').onclick = e => { if (e.target.id === 'ov') close_(); };
+
+/* ---------- tabs, filter, list ---------- */
+const FIELDS = {
+  my: ['status', 'jenis', 'due', 'sort', 'q'], all: ['divisi', 'jenis', 'sort', 'q'], sy: ['divisi', 'sort', 'q']
+};
+function go(t) {
+  if (t) { S.tab = t; localStorage.kz_tab = t; }
+  document.querySelectorAll('.tab').forEach(b => b.classList.toggle('on', b.dataset.t === S.tab));
+  $('#me').outerHTML = avatar(S.me).replace('class="av', 'id="me" title="My profile" class="av'); $('#me').onclick = () => profile();
+  $('#fab').textContent = S.tab === 'sy' ? '+ Sayembara baru' : '+ Kaizen baru'; $('#fab').onclick = () => S.tab === 'sy' ? newSy() : form();
+  const f = S.f[S.tab] = S.f[S.tab] || {}, divs = [...new Set(S.users.map(u => u.divisi).filter(Boolean))];
+  const mk = {
+    status: `<select data-k="status"><option value="">Semua status</option>${STAT.map(s => `<option ${f.status === s ? 'selected' : ''}>${s}</option>`).join('')}</select>`,
+    jenis: `<select data-k="jenis"><option value="">Pribadi + sayembara</option><option value="pribadi" ${f.jenis === 'pribadi' ? 'selected' : ''}>Pribadi</option><option value="sayembara" ${f.jenis === 'sayembara' ? 'selected' : ''}>Sayembara</option></select>`,
+    divisi: `<select data-k="divisi"><option value="">Semua divisi</option>${divs.map(d => `<option ${f.divisi === d ? 'selected' : ''}>${E(d)}</option>`).join('')}</select>`,
+    due: `<input type="date" data-k="due" value="${f.due || ''}" title="Due date maksimal">`,
+    sort: `<select data-k="sort"><option value="new">Terbaru dulu</option><option value="old" ${f.sort === 'old' ? 'selected' : ''}>Terlama dulu</option></select>`,
+    q: `<input type="search" data-k="q" placeholder="Cari kata apa saja…" value="${E(f.q || '')}">`
+  };
+  $('#bar').innerHTML = FIELDS[S.tab].map(k => mk[k]).join('');
+  $('#bar').oninput = e => { f[e.target.dataset.k] = e.target.value; draw(); };
+  draw();
+}
+document.querySelectorAll('.tab').forEach(b => b.onclick = () => go(b.dataset.t));
+
+function draw() {
+  const f = S.f[S.tab] || {}, q = (f.q || '').toLowerCase();
+  let a = S.tab === 'sy' ? S.sy : S.kz.filter(k => S.tab === 'all' || k.email === S.me.email);
+  a = a.filter(x => (!f.status || x.status === f.status) && (!f.jenis || x.jenis === f.jenis) && (!f.divisi || x.divisi === f.divisi) && (!f.due || (x.due && x.due <= f.due)) && (!q || JSON.stringify(x).toLowerCase().includes(q)));
+  a.sort((x, y) => f.sort === 'old' ? x.dibuat - y.dibuat : y.dibuat - x.dibuat);
+  $('#grid').innerHTML = a.length ? a.map(S.tab === 'sy' ? cardSy : cardKz).join('') : `<div class="empty" style="grid-column:1/-1">Belum ada data di sini.<br>Coba ubah filter atau tambah yang baru.</div>`;
+  document.querySelectorAll('[data-id]').forEach(c => c.onclick = e => { if (e.target.closest('button')) return; S.tab === 'sy' ? 0 : (S.tab === 'my' ? form(c.dataset.id) : view(c.dataset.id)); });
+  document.querySelectorAll('[data-take]').forEach(b => b.onclick = () => take(b.dataset.take));
+}
+const who = (e, d) => { const u = U(e); return `<div class="who">${avatar(u)}<div><b>${E(u.nama)}</b>${E(u.divisi)}</div></div>`; };
+const cardKz = k => `<div class="card s-${k.status}" data-id="${k.id}">${who(k.email)}
+<h3>${E(k.kategori)}</h3>${k.jenis === 'sayembara' ? `<span class="tag">★ ${E(k.masalah.split(':')[0])}</span>` : ''}
+<p>${E(k.isi) || '<i>Belum diisi</i>'}</p><div class="meta"><span>Due ${fdate(k.due)}</span><span class="pill">${k.status}</span></div></div>`;
+const cardSy = s => `<div class="card s-plan" style="cursor:default">${who(s.email)}<h3>Butuh bantuan</h3><p style="-webkit-line-clamp:5">${E(s.problem)}</p>
+<div class="meta"><span>Due ${fdate(s.due)}</span>${s.ambilEmail ? `<span class="pill">Sedang ditangani oleh ${E(s.ambilNama)}</span>` : `<button class="btn" data-take="${s.id}">Aku tangani ini</button>`}</div></div>`;
+
+async function take(id) {
+  if (!confirm('Ambil sayembara ini? Akan masuk ke My Kaizen kamu.')) return;
+  apply(await api('takeSayembara', { id }, 'Mengambil sayembara')); toast('Sayembara masuk ke My Kaizen'); go('my');
+}
+
+/* ---------- detail (read only) ---------- */
+function view(id) {
+  const k = S.kz.find(x => x.id === id), ph = (s, t) => s ? `<div><label>${t}</label><img src="${E(s)}" style="width:100%;border-radius:14px"></div>` : `<div><label>${t}</label><div class="ph">Belum ada foto</div></div>`;
+  modal(`<h2>${E(k.kategori)}</h2>${who(k.email)}${k.masalah ? `<label>Sayembara</label><p>${E(k.masalah)}</p>` : ''}
+<label>Detail kaizen</label><p>${E(k.isi) || '-'}</p><div class="two"><div><label>Due date</label>${fdate(k.due)}</div><div><label>Status</label>${k.status}</div></div>
+<div class="two" style="margin-top:8px">${ph(k.before, 'Before')}${ph(k.after, 'After')}</div><div class="act"><button class="btn g" onclick="close_()">Tutup</button></div>`);
+}
+
+/* ---------- form kaizen (dengan draft otomatis) ---------- */
+const DK = () => 'kz_draft_' + S.me.email;
+function form(id) {
+  const k = id ? S.kz.find(x => x.id === id) : null, dr = !id && JSON.parse(localStorage[DK()] || 'null'), v = k || dr || {};
+  const isCat = !v.kategori || CATS.includes(v.kategori), im = { before: v.before || '', after: v.after || '' };
+  modal(`<h2>${k ? 'Update kaizen' : 'Kaizen baru'}</h2>${k && k.masalah ? `<p class="tag">${E(k.masalah)}</p>` : ''}
+<label>Kamu dari divisi mana</label><input id="f_div" value="${E(v.divisi || S.me.divisi)}">
+<label>Kaizen untuk apa</label><select id="f_cat">${CATS.map(c => `<option ${v.kategori === c ? 'selected' : ''}>${c}</option>`).join('')}<option value="__o" ${isCat ? '' : 'selected'}>Isi sendiri…</option></select>
+<input id="f_oth" class="${isCat ? 'hide' : ''}" placeholder="Tulis kategorimu" value="${isCat ? '' : E(v.kategori)}" style="margin-top:8px">
+<label>Apa kaizenmu</label><textarea id="f_isi">${E(v.isi)}</textarea>
+<div class="two"><div><label>Rencana selesai tanggal</label><input type="date" id="f_due" value="${v.due || ''}"></div>
+<div><label>Status</label><select id="f_st">${STAT.map(s => `<option ${v.status === s ? 'selected' : ''}>${s}</option>`).join('')}</select></div></div>
+<div class="two"><div><label>Foto before</label><div class="ph" id="p_before">Ketuk untuk unggah</div></div><div><label>Foto after</label><div class="ph" id="p_after">Ketuk untuk unggah</div></div></div>
+<input type="file" id="fi" accept="image/*" class="hide"><div class="dr" id="dr">${dr ? 'Draft yang belum selesai dikembalikan.' : ''}</div>
+<div class="act"><button class="btn g" onclick="close_()">Batal</button><button class="btn" id="sv">Simpan</button></div>`);
+  let cur;
+  const paint = n => { const p = $('#p_' + n); if (im[n]) { p.style.backgroundImage = `url(${im[n]})`; p.textContent = ''; } };
+  ['before', 'after'].forEach(n => { paint(n); $('#p_' + n).onclick = () => { cur = n; $('#fi').click(); }; });
+  $('#fi').onchange = async e => { if (e.target.files[0]) { im[cur] = await img(e.target.files[0]); paint(cur); e.target.value = ''; draft(); } };
+  $('#f_cat').onchange = () => $('#f_oth').classList.toggle('hide', $('#f_cat').value !== '__o');
+  const get = () => ({ id: id || '', divisi: $('#f_div').value.trim(), kategori: $('#f_cat').value === '__o' ? $('#f_oth').value.trim() : $('#f_cat').value, isi: $('#f_isi').value.trim(), due: $('#f_due').value, status: $('#f_st').value, before: im.before, after: im.after });
+  function draft() { if (id) return; try { localStorage[DK()] = JSON.stringify(get()); $('#dr').textContent = 'Draft tersimpan otomatis ✓'; } catch (e) { } }
+  $('#md').oninput = draft;
+  $('#sv').onclick = async () => {
+    const d = get(); if (!d.divisi || !d.kategori || !d.isi || !d.due) return toast('Divisi, kategori, isi, dan tanggal wajib diisi');
+    apply(await api('saveKaizen', d, 'Menyimpan kaizen & mengunggah foto')); localStorage.removeItem(DK()); close_(); toast('Kaizen tersimpan ✓'); go('my');
+  };
+}
+
+/* ---------- sayembara baru ---------- */
+function newSy() {
+  const k = 'kz_sy_' + S.me.email, d = JSON.parse(localStorage[k] || '{}');
+  modal(`<h2>Sayembara baru</h2><label>Tulis di sini problem yang kamu gak bisa tangani sendiri</label><textarea id="s_p">${E(d.p)}</textarea>
+<label>Due date</label><input type="date" id="s_d" value="${d.d || ''}"><div class="act"><button class="btn g" onclick="close_()">Batal</button><button class="btn" id="s_sv">Kirim</button></div>`);
+  $('#md').oninput = () => localStorage[k] = JSON.stringify({ p: $('#s_p').value, d: $('#s_d').value });
+  $('#s_sv').onclick = async () => {
+    const p = $('#s_p').value.trim(), d = $('#s_d').value; if (!p || !d) return toast('Problem dan due date wajib diisi');
+    apply(await api('addSayembara', { problem: p, due: d }, 'Mengirim sayembara')); localStorage.removeItem(k); close_(); toast('Sayembara terkirim ✓'); go('sy');
+  };
+}
+
+/* ---------- profil ---------- */
+function profile(first) {
+  const m = S.me || { nama: '', divisi: '', foto: '' }; let foto = '';
+  modal(`<h2>${first ? 'Selamat datang! Isi profilmu' : 'My profile'}</h2><div style="display:flex;gap:14px;align-items:center"><div class="ph" id="p_f" style="width:90px;aspect-ratio:1;border-radius:50%;flex:none;${m.foto ? `background-image:url(${E(m.foto)})` : ''}">${m.foto ? '' : 'Foto'}</div><div style="flex:1;color:var(--mut);font-size:13px">Login sebagai<br><b style="color:var(--ink)">${E(S.me ? S.me.email : 'akun Google kamu')}</b></div></div>
+<input type="file" id="fi" accept="image/*" class="hide"><label>Nama</label><input id="pn" value="${E(m.nama)}"><label>Divisi</label><input id="pd" value="${E(m.divisi)}">
+<div class="act">${first ? '' : '<button class="btn g" onclick="logout()">Logout</button><button class="btn g" onclick="close_()">Tutup</button>'}<button class="btn" id="ps">Simpan</button></div>`);
+  $('#p_f').onclick = () => $('#fi').click();
+  $('#fi').onchange = async e => { if (e.target.files[0]) { foto = await img(e.target.files[0], 400); $('#p_f').style.backgroundImage = `url(${foto})`; $('#p_f').textContent = ''; } };
+  $('#ps').onclick = async () => {
+    const d = { nama: $('#pn').value, divisi: $('#pd').value, foto }; if (!d.nama.trim() || !d.divisi.trim()) return toast('Nama dan divisi wajib diisi');
+    apply(await api('saveProfile', d, 'Menyimpan profil')); close_(); toast('Profil tersimpan ✓'); go();
+  };
+}
+</script></body></html>
