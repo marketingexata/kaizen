@@ -1,75 +1,49 @@
 <!DOCTYPE html>
 <html lang="id"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
 <title>Juri Kaizen</title>
-<link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display&family=DM+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Lora:wght@500;600;700&family=Source+Sans+3:wght@400;500;600;700&display=swap" rel="stylesheet">
 <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
 <style>
-:root{--fd:'DM Serif Display',Georgia,serif;--fb:'DM Sans',sans-serif;--fw:400;--ink:#2d1a44;--mut:#85709a;--bg:#fffbfe;--line:#f3e2ee;--acc:#d93f80;--acc2:#8b6cf0;--t0:#fdeef6;--t1:#ffe3ef;--t2:#e9f8f4;--sh:#d93f8022;--ring:#d93f8055}
-*{box-sizing:border-box;margin:0}
-body{font:15px/1.55 var(--fb);color:var(--ink);background:var(--bg);background-image:radial-gradient(640px 320px at 8% -6%,var(--t1),transparent),radial-gradient(520px 300px at 98% 0,var(--t2),transparent);background-repeat:no-repeat;min-height:100vh}
-h1,h2,h3{font-family:var(--fd);font-weight:var(--fw)}button,input,select,textarea{font:inherit;color:inherit}
-.hide{display:none!important}:focus-visible{outline:3px solid var(--ring);outline-offset:2px}
-header{position:sticky;top:0;z-index:5;background:#fffffff0;backdrop-filter:blur(10px);border-bottom:1px solid var(--line);display:flex;align-items:center;gap:16px;padding:10px 20px;flex-wrap:wrap}
-header h1{font-size:24px;display:flex;align-items:center;gap:10px}.sp{flex:1}
-.lg{width:34px;height:34px;border-radius:11px;background:linear-gradient(135deg,var(--acc),var(--acc2));color:#fff;display:grid;place-items:center;font-size:18px}
-.tabs{display:flex;gap:2px;background:var(--t0);padding:4px;border-radius:99px}
-.tab{border:0;background:none;padding:8px 16px;border-radius:99px;cursor:pointer;font-weight:600;color:var(--mut);transition:.2s;white-space:nowrap}
-.tab:hover{color:var(--ink)}.tab.on{background:#fff;color:var(--acc);box-shadow:0 2px 8px var(--sh)}
-.av{width:38px;height:38px;border-radius:50%;object-fit:cover;background:var(--t1);display:grid;place-items:center;font-weight:700;color:var(--acc);cursor:pointer;overflow:hidden;flex:none;box-shadow:0 0 0 2px #fff,0 0 0 3px var(--line)}
-main{max-width:1100px;margin:auto;padding:26px 20px 100px}
-#stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:12px;margin-bottom:22px}#stats:empty{display:none}
-.st{background:#fff;border:1px solid var(--line);border-radius:18px;padding:14px 16px;display:flex;flex-direction:column;position:relative;overflow:hidden}
-.st i{position:absolute;right:-16px;top:-16px;width:62px;height:62px;border-radius:50%;background:var(--c)}
-.st b{font:var(--fw) 30px/1.1 var(--fd)}.st span{color:var(--mut);font-size:13px}
-.pg{grid-column:1/-1;background:#fff;border:1px solid var(--line);border-radius:18px;padding:12px 16px}.pg>div:first-child{display:flex;justify-content:space-between;font-size:13px}.pg b{font-family:var(--fb)}
-.bb{height:7px;background:var(--t0);border-radius:9px;overflow:hidden;margin-top:6px}.bb i{display:block;height:100%;background:linear-gradient(90deg,var(--acc),var(--acc2));border-radius:9px}
-.bar{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:20px;align-items:center}.bar:empty{display:none}
-.bar>*{padding:9px 14px;border:1px solid var(--line);border-radius:99px;background:#fff;min-width:0}.bar input[type=search]{flex:1;min-width:160px}
-.btn{border:0;background:var(--acc);color:#fff;font-weight:700;padding:10px 20px;border-radius:99px;cursor:pointer;transition:.2s}
-.btn:hover{transform:translateY(-1px);box-shadow:0 8px 18px var(--ring)}.btn.g{background:#fff;color:var(--ink);border:1px solid var(--line)}.btn.g:hover{box-shadow:0 6px 14px var(--sh)}.btn[disabled]{background:#c9cfe2;transform:none;box-shadow:none}
+:root{--ink:#2a1238;--mut:#7d6a8a;--bg:#fff6fb;--line:#f1dcea;--pk:#e8337a;--mint:#12b8a6;--sun:#ffd23f;--pkl:#ffe1ee;--mil:#d6f6f1;--sul:#fff0b8}
+*{box-sizing:border-box;margin:0}body{font:16px/1.5 'Source Sans 3',sans-serif;color:var(--ink);background:var(--bg)}
+h1,h2,h3{font-family:Lora,Georgia,serif}button,input,select,textarea{font:inherit;color:inherit}.hide{display:none!important}
+header{position:sticky;top:0;z-index:5;background:#fffffff2;backdrop-filter:blur(8px);border-bottom:1px solid var(--line);display:flex;align-items:center;gap:16px;padding:10px 20px;flex-wrap:wrap}
+header h1{font-size:26px;font-weight:700}.sp{flex:1}
+.tabs{display:flex;gap:4px;background:var(--bg);padding:4px;border-radius:99px}
+.tab{border:0;background:none;padding:8px 18px;border-radius:99px;cursor:pointer;font-weight:700;color:var(--mut);transition:.25s;white-space:nowrap}.tab.on{background:var(--pk);color:#fff}
+.av{width:38px;height:38px;border-radius:50%;object-fit:cover;background:var(--pkl);display:grid;place-items:center;font-weight:700;color:var(--pk);cursor:pointer;overflow:hidden;flex:none}
+main{max-width:1100px;margin:auto;padding:24px 20px 60px}
+.bar{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:20px}.bar>*{padding:9px 12px;border:1px solid var(--line);border-radius:12px;background:#fff;min-width:0}.bar input[type=search]{flex:1;min-width:160px}
+.btn{border:0;background:var(--pk);color:#fff;font-weight:700;padding:10px 18px;border-radius:12px;cursor:pointer;transition:.2s}.btn:hover{transform:translateY(-1px);box-shadow:0 6px 16px #e8337a40}.btn.g{background:#fff;color:var(--ink);border:1px solid var(--line)}
 .grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(290px,1fr));gap:16px}
-.card{background:#fff;border:1px solid var(--line);border-radius:22px;padding:18px;cursor:pointer;transition:.2s;display:flex;flex-direction:column;gap:10px}
-.card:hover{transform:translateY(-2px);box-shadow:0 14px 30px var(--sh)}
-.s-plan,.plan{--c0:#e8edff;--c1:#4458d6}.s-progress,.progress{--c0:#fff2c9;--c1:#a86f00}.s-hold,.hold{--c0:#ffe1e1;--c1:#c23b3b}.s-done,.done{--c0:#d8f5ea;--c1:#12805f}
-.stg{display:grid;grid-template-columns:repeat(4,1fr);gap:4px}.stg span{height:5px;border-radius:9px;background:var(--line)}.stg span.on{background:var(--c1)}
-.who{display:flex;gap:10px;align-items:center;font-size:13px;color:var(--mut)}.who b{display:block;font-size:14px;color:var(--ink)}
-.card h3{font-size:19px;line-height:1.2}.card p{color:#47506b;display:-webkit-box;-webkit-line-clamp:3;-webkit-box-orient:vertical;overflow:hidden}
-.meta{display:flex;justify-content:space-between;align-items:center;font-size:13px;color:var(--mut);margin-top:auto;gap:8px;flex-wrap:wrap}
-.pill{display:inline-flex;align-items:center;background:var(--c0,var(--t0));color:var(--c1,var(--ink));padding:3px 11px;border-radius:99px;font-weight:700;font-size:12px}
-.pill::before{content:"";width:6px;height:6px;border-radius:50%;background:currentColor;margin-right:6px}
-.tag{font-size:12px;font-weight:700;color:var(--acc)}
-.ok{background:var(--t2);color:#0e7a5c;font-weight:700;font-size:12px;padding:4px 11px;border-radius:99px;align-self:flex-start}
-.nb{background:var(--t0);border-radius:14px;padding:12px;margin:10px 0}.nb p{margin-top:6px}.empty{text-align:center;color:var(--mut);padding:60px 0}
-.sc{background:var(--t2);color:#0e7a5c;border-radius:99px;padding:2px 12px;font:var(--fw) 18px var(--fd)}.sc.no{background:var(--t0);color:var(--mut);font:600 12px var(--fb);padding:5px 11px}
-.fab{position:fixed;right:20px;bottom:20px;box-shadow:0 10px 24px var(--ring);padding:14px 24px;z-index:4}
-.pod{display:grid;grid-template-columns:1fr 1.15fr 1fr;gap:12px;align-items:end;margin-bottom:14px}
-.pd{background:#fff;border:1px solid var(--line);border-radius:22px;padding:16px 10px 14px;text-align:center;display:flex;flex-direction:column;align-items:center;gap:3px}
-.pd.r1{background:linear-gradient(180deg,#fff0b8,#fff 90%);padding-top:28px}.pd.r2{background:var(--t0)}.pd.r3{background:var(--t2)}
-.pd .av{width:56px;height:56px;font-size:22px}.pd small,.lr small{color:var(--mut);font-size:12px}
-.rk{font:var(--fw) 13px var(--fd);width:26px;height:26px;border-radius:50%;background:var(--ink);color:#fff;display:grid;place-items:center}
-.pd .sv{font:var(--fw) 28px/1.1 var(--fd);color:var(--acc)}
-.lst{display:grid;gap:8px}.lr{display:grid;grid-template-columns:28px 38px minmax(0,1fr) auto;gap:12px;align-items:center;background:#fff;border:1px solid var(--line);border-radius:16px;padding:10px 14px}
-.lr .n{font:var(--fw) 16px var(--fd);color:var(--mut);text-align:center}.rt{text-align:right}.rt b{font:var(--fw) 20px var(--fd);color:var(--acc);display:block}
-.ov{position:fixed;inset:0;background:#1e274766;display:grid;place-items:center;z-index:20;padding:14px;opacity:0;pointer-events:none;transition:.25s}.ov.on{opacity:1;pointer-events:auto}
-.modal{background:#fff;border-radius:28px;padding:26px;width:min(660px,100%);max-height:92vh;overflow:auto;transform:translateY(20px) scale(.98);transition:.3s}.ov.on .modal{transform:none}
-.modal h2{font-size:27px;margin-bottom:12px}label{display:block;font-weight:600;font-size:13px;margin:14px 0 5px}
-.modal input:not([type=file]),.modal select,.modal textarea{width:100%;padding:10px 14px;border:1px solid var(--line);border-radius:14px;background:#fff}
-.modal input:focus,.modal select:focus,.modal textarea:focus,.bar>*:focus,.lf input:focus{outline:none;border-color:var(--acc);box-shadow:0 0 0 3px var(--ring)}
-textarea{min-height:100px;resize:vertical}.two{display:grid;grid-template-columns:1fr 1fr;gap:12px}
-.ph{aspect-ratio:4/3;border:2px dashed var(--line);border-radius:16px;display:grid;place-items:center;color:var(--mut);cursor:pointer;background-size:cover;background-position:center;font-size:13px;text-align:center;background-color:var(--t0)}
-.act{display:flex;gap:8px;justify-content:flex-end;margin-top:20px}.dr{font-size:12px;color:var(--mut);margin-top:8px}.box{background:var(--t0);border-radius:18px;padding:14px;margin-top:16px}
+.card{background:#fff;border:1px solid var(--line);border-radius:20px;padding:18px;cursor:pointer;transition:.25s;display:flex;flex-direction:column;gap:10px}
+.card:hover{transform:translateY(-3px);box-shadow:0 12px 28px #e8337a22}
+.who{display:flex;gap:10px;align-items:center;font-size:13px}.who b{display:block;font-size:14px}
+.card h3{font-size:18px;line-height:1.2}.card p{color:#4a3a55;display:-webkit-box;-webkit-line-clamp:3;-webkit-box-orient:vertical;overflow:hidden}
+.meta{display:flex;justify-content:space-between;align-items:center;font-size:13px;color:var(--mut);margin-top:auto;gap:8px}
+.pill{background:var(--pkl);padding:3px 10px;border-radius:99px;font-weight:700;color:var(--ink);font-size:12px}.pill.done{background:var(--mil)}.pill.hold{background:var(--sul)}
+.sc{background:var(--mint);color:#fff;border-radius:12px;padding:2px 10px;font:700 18px Lora,Georgia,serif}.sc.no{background:var(--line);color:var(--mut);font-size:12px;font-family:'Source Sans 3',sans-serif;font-weight:600;padding:5px 10px}
+.empty{text-align:center;color:var(--mut);padding:60px 0}
+.ov{position:fixed;inset:0;background:#2a123866;display:grid;place-items:center;z-index:20;padding:14px;opacity:0;pointer-events:none;transition:.25s}.ov.on{opacity:1;pointer-events:auto}
+.modal{background:#fff;border-radius:24px;padding:24px;width:min(680px,100%);max-height:92vh;overflow:auto;transform:translateY(20px);transition:.3s}.ov.on .modal{transform:none}
+.modal h2{font-size:26px;margin-bottom:10px}label{display:block;font-weight:700;font-size:13px;margin:12px 0 4px}
+.modal input,.modal textarea{width:100%;padding:10px 12px;border:1px solid var(--line);border-radius:12px}textarea{min-height:80px;resize:vertical}
+.two{display:grid;grid-template-columns:1fr 1fr;gap:12px}.act{display:flex;gap:8px;justify-content:flex-end;margin-top:16px}
+.ph{aspect-ratio:4/3;border:2px dashed var(--line);border-radius:14px;display:grid;place-items:center;color:var(--mut);font-size:13px}
+.box{background:var(--bg);border-radius:16px;padding:14px;margin-top:16px}.dr{font-size:12px;color:var(--mut);margin-top:6px}
 #login{min-height:100vh;display:grid;place-items:center;text-align:center;padding:20px}
-#login h1{font-size:clamp(42px,9vw,80px);line-height:1.05;letter-spacing:-1px;margin-bottom:22px}
-.lf{display:grid;gap:10px;text-align:left}.lf input{padding:13px 16px;border:1px solid var(--line);border-radius:99px;background:#fff}.lf a{color:var(--acc);font-size:14px;text-align:center;font-weight:600}
-.tw{overflow:auto;border-radius:18px;border:1px solid var(--line)}#tbl{background:#fff;padding:28px;min-width:640px}#tbl h2{font-size:28px}
-table{border-collapse:collapse;width:100%;margin-top:14px;font-size:14px}th{background:var(--acc);color:#fff;text-align:left;padding:9px 10px}td{padding:8px 10px;border-bottom:1px solid var(--line);vertical-align:top}
-tr.sub td{background:var(--t0);font-weight:700}tr.dv td{background:var(--ink);color:#fff;font-weight:700;font-family:var(--fd)}td.n{text-align:center;font-weight:700}
+#login h1{font-size:clamp(44px,9vw,84px);line-height:1.05;letter-spacing:-1px;font-weight:700;margin-bottom:18px}
+.lf{display:grid;gap:10px;text-align:left}.lf input{padding:13px 15px;border:1px solid var(--line);border-radius:12px;background:#fff}
+.tw{overflow:auto;border-radius:16px}#tbl{background:#fff;padding:28px;min-width:640px}#tbl h2{font-size:28px}
+table{border-collapse:collapse;width:100%;margin-top:14px;font-size:14px}th{background:var(--pk);color:#fff;text-align:left;padding:9px 10px}td{padding:8px 10px;border-bottom:1px solid var(--line);vertical-align:top}
+tr.sub td{background:var(--pkl);font-weight:700}tr.dv td{background:var(--ink);color:#fff;font-weight:700;font-family:Lora,Georgia,serif}td.n{text-align:center;font-weight:700}
 #ld{position:fixed;inset:0;background:#fffffff0;z-index:50;display:grid;place-items:center;opacity:0;pointer-events:none;transition:.25s}#ld.on{opacity:1;pointer-events:auto}
-.lb{width:min(300px,80vw);text-align:center}.trk{height:10px;background:var(--t0);border-radius:9px;overflow:hidden;margin:14px 0 8px}
-#lf{height:100%;width:0;background:linear-gradient(90deg,var(--acc),var(--acc2));border-radius:9px;transition:width .2s}#lp{font:var(--fw) 42px var(--fd)}
-#toast{position:fixed;left:50%;bottom:28px;transform:translate(-50%,80px);background:var(--ink);color:#fff;padding:12px 22px;border-radius:99px;z-index:60;transition:.35s}#toast.on{transform:translate(-50%,0)}
-@media(max-width:640px){.tabs{order:3;width:100%;overflow:auto}header{padding:10px 14px}.pod{gap:6px}.pd{padding:12px 4px}.pd.r1{padding-top:20px}.pd b{font-size:13px}.pd .sv{font-size:22px}}
+.lb{width:min(300px,80vw);text-align:center}.trk{height:10px;background:var(--pkl);border-radius:9px;overflow:hidden;margin:14px 0 8px}
+#lf{height:100%;width:0;background:linear-gradient(90deg,var(--pk),var(--sun));border-radius:9px;transition:width .2s}#lp{font:700 40px Lora,Georgia,serif}
+#toast{position:fixed;left:50%;bottom:28px;transform:translate(-50%,80px);background:var(--ink);color:#fff;padding:12px 20px;border-radius:12px;z-index:60;transition:.35s}#toast.on{transform:translate(-50%,0)}
+@media(max-width:640px){.tabs{order:3;width:100%;overflow:auto}header{padding:10px 14px}}
 @media(prefers-reduced-motion:reduce){*{transition:none!important}}
+.modal h2{padding-right:44px}.x{position:sticky;top:0;z-index:3;display:grid;place-items:center;width:34px;height:34px;margin:0 0 -34px auto;border:0;border-radius:50%;background:var(--pkl);color:var(--ink);font-size:15px;cursor:pointer;transition:.2s}.x:hover{transform:rotate(90deg)}
 </style></head><body>
 
 <section id="login"><div style="width:min(380px,100%)"><h1>Juri.<br>Nilai dengan<br>adil.</h1>
@@ -77,9 +51,9 @@ tr.sub td{background:var(--t0);font-weight:700}tr.dv td{background:var(--ink);co
 <button class="btn" id="l_go">Masuk</button><small style="color:var(--mut)">Email harus sudah didaftarkan admin di sheet "Juri". Password awal 12345.</small></div></div></section>
 
 <div id="app" class="hide">
-<header><h1><span class="lg">J</span>Juri</h1><nav class="tabs"><button class="tab" data-t="all">All Kaizen</button><button class="tab" data-t="sy">Sayembara</button><button class="tab" data-t="lb">Peringkat</button><button class="tab" data-t="tp">Skoring Template</button></nav>
+<header><h1>Juri</h1><nav class="tabs"><button class="tab" data-t="all">All Kaizen</button><button class="tab" data-t="sy">Sayembara</button><button class="tab" data-t="tp">Skoring Template</button></nav>
 <span class="sp"></span><div class="av" id="me" title="My profile"></div></header>
-<main><div id="stats"></div><div class="bar" id="bar"></div><div class="grid" id="grid"></div></main></div>
+<main><div class="bar" id="bar"></div><div class="grid" id="grid"></div></main></div>
 
 <div class="ov" id="ov"><div class="modal" id="md"></div></div>
 <div id="ld"><div class="lb"><div id="lp">0%</div><div class="trk"><div id="lf"></div></div><b>Tunggu ya…</b><div id="lm" style="color:var(--mut);font-size:13px"></div></div></div>
@@ -88,6 +62,10 @@ tr.sub td{background:var(--t0);font-weight:700}tr.dv td{background:var(--ink);co
 <script>
 const API = 'https://script.google.com/macros/s/AKfycbx4GZOGmYPAyPl26MN-ZeeXeWQxkThHfUif6WVApFc217fdj3drazTKppNSkvUjIsKQaA/exec';
 const $ = s => document.querySelector(s), E = s => String(s ?? '').replace(/[&<>"]/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]));
+const DIVS = ['EXATA', 'JP Smart', 'JLCT', 'J-Expert', 'MC', 'IT', 'Finance', 'Exata Daily', 'Support', 'Yanoshi'], _seen = {};
+// Samakan penulisan divisi (huruf besar-kecil dan spasi) supaya filter, kartu, dan peringkat konsisten
+const canon = d => { d = String(d || '').trim().replace(/\s+/g, ' '); const k = d.toLowerCase(); return DIVS.find(x => x.toLowerCase() === k) || (_seen[k] = _seen[k] || d); };
+const normAll = () => { [S.me].concat(S.users, S.kz, S.sy).forEach(o => { if (o && 'divisi' in o) o.divisi = canon(o.divisi); }); };
 let S = { tab: localStorage.jr_tab || 'all', tok: localStorage.jr_tok || '', me: null, users: [], kz: [], sy: [], sk: [], f: {} };
 
 /* ---------- loader + api ---------- */
@@ -109,7 +87,7 @@ async function api(action, data, msg) {
 }
 function apply(d) {
   if (d.token) { S.tok = d.token; localStorage.jr_tok = d.token; }
-  S.me = d.me; S.users = d.users; S.kz = d.kaizen; S.sy = d.sayembara; S.sk = d.skor;
+  S.me = d.me; S.users = d.users; S.kz = d.kaizen; S.sy = d.sayembara; S.sk = d.skor; normAll();
 }
 
 /* ---------- login ---------- */
@@ -137,16 +115,14 @@ const fdate = d => d ? new Date(d + 'T00:00').toLocaleDateString('id-ID', { day:
 const mine = id => S.sk.find(s => s.kaizenId === id && s.juriEmail === S.me.email);
 const avg = id => { const a = S.sk.filter(s => s.kaizenId === id).map(s => +s.skor); return a.length ? a.reduce((x, y) => x + y) / a.length : null; };
 const who = e => { const u = U(e); return `<div class="who">${avatar(u)}<div><b>${E(u.nama)}</b>${E(u.divisi)}</div></div>`; };
-function modal(h) { $('#md').innerHTML = h; $('#ov').classList.add('on'); }
+function modal(h, lock) { $('#md').innerHTML = (lock ? '' : '<button class="x" onclick="close_()" aria-label="Tutup">✕</button>') + h; $('#md').scrollTop = 0; $('#ov').classList.add('on'); }
 function close_() { $('#ov').classList.remove('on'); }
-$('#ov').onclick = e => { if (e.target.id === 'ov') close_(); };
 
 /* ---------- tab, filter, daftar ---------- */
 function go(t) {
   if (t) { S.tab = t; localStorage.jr_tab = t; }
   document.querySelectorAll('.tab').forEach(b => b.classList.toggle('on', b.dataset.t === S.tab));
   $('#me').outerHTML = avatar({ nama: S.me.nama }).replace('class="av', 'id="me" title="My profile" class="av'); $('#me').onclick = () => profile();
-  stats(); if (S.tab === 'lb') { $('#bar').innerHTML = ''; return board(); }
   if (S.tab === 'tp') { $('#bar').innerHTML = `<button class="btn" id="dpng">Unduh PNG 300ppi</button><button class="btn g" id="djpg">Unduh JPG 300ppi</button>`; $('#dpng').onclick = () => dl('png'); $('#djpg').onclick = () => dl('jpg'); return table(); }
   const f = S.f[S.tab] = S.f[S.tab] || {}, divs = [...new Set(S.users.map(u => u.divisi).filter(Boolean))];
   $('#bar').innerHTML = `<select data-k="divisi"><option value="">Semua divisi</option>${divs.map(d => `<option ${f.divisi === d ? 'selected' : ''}>${E(d)}</option>`).join('')}</select>
@@ -160,13 +136,13 @@ document.querySelectorAll('.tab').forEach(b => b.onclick = () => go(b.dataset.t)
 
 function draw() {
   const f = S.f[S.tab], q = (f.q || '').toLowerCase();
-  let a = S.tab === 'all' ? S.kz.filter(k => k.jenis !== 'sayembara').map(k => ({ ...k, kid: k.id })) : S.sy.map(s => { const k = S.kz.find(x => x.id === s.kaizenId); return { ...s, kid: s.kaizenId, status: k ? k.status : '', isi: k ? k.isi : '' }; });
+  let a = S.tab === 'all' ? S.kz.filter(k => k.jenis !== 'sayembara').map(k => ({ ...k, kid: k.id })) : S.sy.flatMap(s => { const ks = String(s.kaizenId || '').split(',').filter(Boolean); if (!ks.length) return [{ ...s, kid: '', status: '', isi: '', penangan: '' }]; return ks.map(kid => { const k = S.kz.find(x => x.id === kid); return { ...s, cid: s.id + '|' + kid, kid, status: k ? k.status : '', isi: k ? k.isi : '', penangan: k ? k.nama : '' }; }); });
   a = a.filter(x => (!f.divisi || x.divisi === f.divisi) && (!f.due || (x.due && x.due <= f.due)) && (!f.skor || (f.skor === 'y') === !!(x.kid && mine(x.kid))) && (!q || JSON.stringify(x).toLowerCase().includes(q)));
   a.sort((x, y) => f.sort === 'old' ? x.dibuat - y.dibuat : y.dibuat - x.dibuat);
   $('#grid').innerHTML = a.length ? a.map(x => {
     const m = x.kid && mine(x.kid), st = x.status || 'belum diambil', badge = m ? `<span class="sc" title="Skor kamu">${m.skor}</span>` : `<span class="sc no">belum dinilai</span>`;
-    return `<div class="card" data-id="${x.id}">${who(x.email)}<h3>${S.tab === 'all' ? E(x.kategori) : 'Sayembara'}</h3>
-<p>${E(S.tab === 'all' ? x.isi : x.problem) || '<i>Belum diisi</i>'}</p>${S.tab === 'sy' ? `<div class="who">Ditangani: <b>${x.ambilNama ? E(x.ambilNama) : 'belum ada'}</b></div>` : ''}
+    return `<div class="card" data-id="${x.cid || x.id}">${who(x.email)}<h3>${S.tab === 'all' ? E(x.kategori) : 'Sayembara'}</h3>
+<p>${E(S.tab === 'all' ? x.isi : x.problem) || '<i>Belum diisi</i>'}</p>${S.tab === 'sy' ? `<div class="who">Ditangani: <b>${x.penangan ? E(x.penangan) : 'belum ada'}</b></div>` : ''}
 <div class="meta"><span>Due ${fdate(x.due)}</span><span class="pill ${st}">${st}</span>${badge}</div></div>`;
   }).join('') : `<div class="empty" style="grid-column:1/-1">Tidak ada data yang cocok dengan filter.</div>`;
   document.querySelectorAll('[data-id]').forEach(c => c.onclick = () => detail(c.dataset.id));
@@ -174,10 +150,10 @@ function draw() {
 
 /* ---------- detail + form skor (draft otomatis) ---------- */
 function detail(id) {
-  const sy = S.tab === 'sy' ? S.sy.find(x => x.id === id) : null, kid = sy ? sy.kaizenId : id, k = S.kz.find(x => x.id === kid);
+  const [sid, skid] = String(id).split('|'), sy = S.tab === 'sy' ? S.sy.find(x => x.id === sid) : null, kid = sy ? skid : id, k = S.kz.find(x => x.id === kid);
   const ph = (s, t) => `<div><label>${t}</label>${s ? `<img src="${E(s)}" style="width:100%;border-radius:14px">` : '<div class="ph">Belum ada foto</div>'}</div>`;
   let body = `<h2>${sy ? 'Sayembara' : E(k.kategori)}</h2>${who((sy || k).email)}`;
-  if (sy) body += `<label>Problem</label><p>${E(sy.problem)}</p><div class="two"><div><label>Due date</label>${fdate(sy.due)}</div><div><label>Ditangani oleh</label>${sy.ambilNama ? E(sy.ambilNama) : 'Belum ada'}</div></div>`;
+  if (sy) body += `<label>Problem</label><p>${E(sy.problem)}</p><div class="two"><div><label>Due date</label>${fdate(sy.due)}</div><div><label>Ditangani oleh</label>${k ? E(k.nama) : 'Belum ada'}</div></div>`;
   if (k) body += `<label>Detail kaizen${sy ? ' (solusi)' : ''}</label><p>${E(k.isi) || '-'}</p><div class="two"><div><label>Due date</label>${fdate(k.due)}</div><div><label>Status</label>${k.status}</div></div><div class="two">${ph(k.before, 'Before')}${ph(k.after, 'After')}</div>`;
   const ok = k && (k.jenis !== 'sayembara' || k.status === 'done'), m = k && mine(k.id), dk = k && 'jr_draft_' + S.me.email + '_' + k.id, dr = dk && !m && JSON.parse(localStorage[dk] || 'null') || {};
   const others = k ? S.sk.filter(s => s.kaizenId === k.id && s.juriEmail !== S.me.email) : [];
@@ -193,27 +169,6 @@ ${others.length ? `<div class="dr">Juri lain: ${others.map(o => E(o.juriNama) + 
   };
 }
 
-
-const t = (c, v, l) => `<div class="st" style="--c:${c}"><i></i><b>${v}</b><span>${l}</span></div>`;
-const fmt = v => v == null ? '–' : (Math.round(v * 10) / 10).toString().replace('.', ',');
-function podium(rows, sub) {
-  const pd = (r, i) => `<div class="pd r${i + 1}"><span class="rk">${i + 1}</span>${avatar(r.u)}<b>${E(r.u.nama)}</b><small>${E(r.u.divisi)}</small><span class="sv">${fmt(r.a)}</span><small>${sub(r)}</small></div>`;
-  const top = rows.slice(0, 3), ord = [[top[1], 1], [top[0], 0], [top[2], 2]].filter(x => x[0]).map(x => pd(x[0], x[1])).join('');
-  $('#grid').innerHTML = rows.length ? `<div style="grid-column:1/-1"><div class="pod">${ord}</div><div class="lst">${rows.slice(3).map((r, i) => `<div class="lr"><span class="n">${i + 4}</span>${avatar(r.u)}<div><b>${E(r.u.nama)}</b> <small>${E(r.u.divisi)}</small><div class="bb"><i style="width:${r.a || 0}%"></i></div></div><div class="rt"><b>${fmt(r.a)}</b><small>${sub(r)}</small></div></div>`).join('')}</div></div>` : '<div class="empty" style="grid-column:1/-1">Belum ada skor untuk diperingkat.</div>';
-}
-
-function stats() {
-  if (S.tab === 'tp' || S.tab === 'lb') { $('#stats').innerHTML = ''; return; }
-  const L = S.kz.filter(k => k.jenis !== 'sayembara' || k.status === 'done'), d = L.filter(k => mine(k.id)).length, p = L.length ? Math.round(d / L.length * 100) : 0;
-  const mn = S.sk.filter(s => s.juriEmail === S.me.email).map(s => +s.skor);
-  $('#stats').innerHTML = t('#ffe3ef', L.length, 'Siap dinilai') + t('#d6f6f1', d, 'Sudah kuberi skor') + t('#fff0b8', L.length - d, 'Menunggu skormu') + t('#e9e3ff', fmt(mn.length ? mn.reduce((a, b) => a + b) / mn.length : null), 'Rata-rata skorku')
-    + `<div class="pg"><div><b>Kemajuan penilaianmu</b><span>${p}%</span></div><div class="bb"><i style="width:${p}%"></i></div></div>`;
-}
-function board() {
-  const m = {};
-  S.kz.forEach(k => { const a = avg(k.id); if (a == null) return; const x = m[k.email] = m[k.email] || { u: U(k.email), n: 0, s: 0 }; x.n++; x.s += a; });
-  podium(Object.values(m).map(x => ({ ...x, a: x.s / x.n })).sort((x, y) => y.a - x.a || y.n - x.n), x => `${x.n} kaizen dinilai`);
-}
 /* ---------- skoring template (tabel rangkuman) ---------- */
 function table() {
   const sc = S.kz.map(k => ({ k, a: avg(k.id) })).filter(x => x.a != null), by = {};
@@ -245,7 +200,7 @@ function profile(first) {
   const m = S.me;
   modal(`<h2>${first ? 'Lengkapi profil juri' : 'My profile'}</h2><div class="dr">Login sebagai <b>${E(m.email)}</b></div><label>Nama</label><input id="pn" value="${E(m.nama)}">
 <label>${m.wajibGanti ? 'Buat password baru (wajib)' : 'Ganti password (kosongkan jika tidak)'}</label><input id="pw" type="password" placeholder="Minimal 5 karakter" autocomplete="new-password">
-<div class="act">${first ? '' : '<button class="btn g" onclick="logout()">Logout</button><button class="btn g" onclick="close_()">Tutup</button>'}<button class="btn" id="ps">Simpan</button></div>`);
+<div class="act">${first ? '' : '<button class="btn g" onclick="logout()">Logout</button><button class="btn g" onclick="close_()">Tutup</button>'}<button class="btn" id="ps">Simpan</button></div>`, first);
   $('#ps').onclick = async () => {
     const d = { nama: $('#pn').value, sandi: $('#pw').value }; if (!d.nama.trim()) return toast('Nama wajib diisi'); if (m.wajibGanti && !d.sandi) return toast('Buat password baru dulu ya');
     apply(await api('profile', d, 'Menyimpan profil')); close_(); toast('Profil tersimpan ✓'); go();
