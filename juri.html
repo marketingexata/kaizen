@@ -48,7 +48,7 @@ tr.sub td{background:var(--pkl);font-weight:700}tr.dv td{background:var(--ink);c
 
 <section id="login"><div style="width:min(380px,100%)"><h1>Juri.<br>Nilai dengan<br>adil.</h1>
 <div class="lf"><input id="l_e" type="email" placeholder="Email juri" autocomplete="username"><input id="l_p" type="password" placeholder="Password" autocomplete="current-password">
-<button class="btn" id="l_go">Masuk</button><small style="color:var(--mut)">Email harus sudah didaftarkan admin di sheet "Juri". Password awal 12345.</small></div></div></section>
+<button class="btn" id="l_go">Masuk</button><a href="#" id="l_fp" style="color:var(--pk);font-weight:700;text-align:center;font-size:14px">Lupa password?</a><small style="color:var(--mut)">Email harus sudah didaftarkan admin di sheet "Juri". Password awal 12345.</small></div></div></section>
 
 <div id="app" class="hide">
 <header><h1>Juri</h1><nav class="tabs"><button class="tab" data-t="all">All Kaizen</button><button class="tab" data-t="sy">Sayembara</button><button class="tab" data-t="tp">Skoring Template</button></nav>
@@ -92,6 +92,8 @@ function apply(d) {
 
 /* ---------- login ---------- */
 window.onload = () => {
+    const fp = $('#l_fp'); fp.onclick = async e => { e.preventDefault(); const email = $('#l_e').value.trim().toLowerCase(); if (!email) return toast('Isi email dulu, lalu klik Lupa password');
+      await api('forgot', { email }, 'Mengirim password sementara'); toast('Jika email terdaftar, password sementara sudah dikirim. Cek inbox dan spam.'); };
   $('#l_go').onclick = async () => {
     const email = $('#l_e').value.trim().toLowerCase(), sandi = $('#l_p').value;
     if (!email || !sandi) return toast('Isi email dan password');
