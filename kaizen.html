@@ -69,6 +69,20 @@ tr.sub td{background:var(--t0);font-weight:700}tr.dv td{background:var(--ink);co
 #toast{position:fixed;left:50%;bottom:28px;transform:translate(-50%,80px);background:var(--ink);color:#fff;padding:12px 22px;border-radius:99px;z-index:60;transition:.35s}#toast.on{transform:translate(-50%,0)}
 @media(max-width:640px){.tabs{order:3;width:100%;overflow:auto}header{padding:10px 14px}.pod{gap:6px}.pd{padding:12px 4px}.pd.r1{padding-top:20px}.pd b{font-size:13px}.pd .sv{font-size:22px}}
 @media(prefers-reduced-motion:reduce){*{transition:none!important}}
+/* ---- tambahan: kategori, thumbnail, penangan, animasi, mobile ---- */
+#hd h2{font-size:clamp(34px,6vw,56px);line-height:1.04;letter-spacing:-1px}#hd p{color:var(--mut);margin:6px 0 22px}
+.chk{display:flex;flex-wrap:wrap;gap:8px}.cb{display:inline-flex;align-items:center;gap:7px;margin:0;padding:8px 14px;border:1px solid var(--line);border-radius:99px;cursor:pointer;font-weight:600;transition:.2s}
+.cb:has(input:checked){background:var(--t1);border-color:var(--acc);color:var(--acc)}.modal .cb input{width:auto!important;padding:0;accent-color:var(--acc)}
+.th{display:grid;grid-template-columns:1fr 1fr;gap:6px}.th div{aspect-ratio:4/3;border-radius:12px;background:var(--t0) center/cover;position:relative}
+.th em{position:absolute;left:6px;bottom:6px;font:600 10px var(--fb);font-style:normal;background:#fffffff0;padding:2px 8px;border-radius:99px}
+.tk{display:grid;gap:8px;background:var(--t0);border-radius:14px;padding:10px 12px}.tk small{font-weight:700;color:var(--ink)}
+.card{animation:up .45s both;animation-delay:calc(var(--i,0)*45ms)}@keyframes up{from{opacity:0;transform:translateY(14px)}}
+.cf{position:fixed;top:55%;width:9px;height:14px;border-radius:2px;z-index:70;pointer-events:none;animation:cf 1.4s cubic-bezier(.2,.8,.3,1) forwards}@keyframes cf{to{transform:translate(var(--x),380px) rotate(var(--r));opacity:0}}
+@media(max-width:640px){header{backdrop-filter:none;background:#fff}main{padding-bottom:150px}
+.tabs{position:fixed;left:12px;right:12px;bottom:12px;width:auto;order:0;justify-content:space-around;background:#fffffff2;backdrop-filter:blur(12px);border:1px solid var(--line);box-shadow:0 10px 30px #1e274728;z-index:8;overflow:visible}
+.tab{flex:1;padding:10px 2px;font-size:12px;text-align:center}.fab{bottom:84px;right:14px}#toast{bottom:96px}
+.ov{align-items:end;padding:0}.modal{width:100%;border-radius:28px 28px 0 0;max-height:90vh;transform:translateY(100%)}.ov.on .modal{transform:none}}
+.modal h2{padding-right:44px}.x{position:sticky;top:0;z-index:3;display:grid;place-items:center;width:34px;height:34px;margin:0 0 -34px auto;border:0;border-radius:50%;background:var(--t1);color:var(--ink);font-size:15px;cursor:pointer;transition:.2s}.x:hover{transform:rotate(90deg)}
 </style></head><body>
 
 <section id="login"><div style="width:min(380px,100%)"><h1>Kaizen.<br>Perbaikan kecil,<br>dampak besar.</h1>
@@ -79,7 +93,7 @@ tr.sub td{background:var(--t0);font-weight:700}tr.dv td{background:var(--ink);co
 <header><h1><span class="lg">K</span>Kaizen</h1>
 <nav class="tabs"><button class="tab" data-t="my">My Kaizen</button><button class="tab" data-t="all">All Kaizen</button><button class="tab" data-t="sy">Sayembara</button><button class="tab" data-t="lb">Peringkat</button></nav>
 <span class="sp"></span><div class="av" id="me" title="My profile"></div></header>
-<main><div id="stats"></div><div class="bar" id="bar"></div><div class="grid" id="grid"></div></main>
+<main><div id="hd"></div><div id="stats"></div><div class="bar" id="bar"></div><div class="grid" id="grid"></div></main>
 <button class="btn fab" id="fab"></button>
 </div>
 
@@ -91,8 +105,15 @@ tr.sub td{background:var(--t0);font-weight:700}tr.dv td{background:var(--ink);co
 /* ====== ISI 2 BARIS INI ====== */
 const API = 'https://script.google.com/macros/s/AKfycbxtb9jjzL4FVHz5Im60obxQp2DYZjuKxmP7SUxFUy5FxMcHsN_ltEh9HLVxu2xjP8wdlg/exec';
 /* Tambah kategori di sini */
-const CATS = ['Efisiensi biaya', 'Lingkungan', 'Kualitas', 'Keselamatan kerja'];
+const CATS = ['Cost', 'Environment', 'Time', 'Manpower'];
 const STAT = ['plan', 'progress', 'hold', 'done'];
+const DIVS = ['EXATA', 'JP Smart', 'JLCT', 'J-Expert', 'MC', 'IT', 'Finance', 'Exata Daily', 'Support', 'Yanoshi'], _seen = {};
+// Samakan penulisan divisi (huruf besar-kecil dan spasi) supaya filter, kartu, dan peringkat konsisten
+const canon = d => { d = String(d || '').trim().replace(/\s+/g, ' '); const k = d.toLowerCase(); return DIVS.find(x => x.toLowerCase() === k) || (_seen[k] = _seen[k] || d); };
+const normAll = () => { [S.me].concat(S.users, S.kz, S.sy).forEach(o => { if (o && 'divisi' in o) o.divisi = canon(o.divisi); }); };
+const divPick = (n, v) => { const o = v && !DIVS.includes(v); return `<div class="chk">${DIVS.map(d => `<label class="cb"><input type="radio" name="${n}" value="${d}" ${v === d ? 'checked' : ''}><span>${d}</span></label>`).join('')}<label class="cb"><input type="radio" name="${n}" value="__o" ${o ? 'checked' : ''}><span>Isi sendiri</span></label></div><input id="${n}_o" class="${o ? '' : 'hide'}" placeholder="Tulis divisimu" value="${o ? E(v) : ''}" style="margin-top:8px">`; };
+const divGet = n => { const r = document.querySelector(`[name=${n}]:checked`); return !r ? '' : r.value === '__o' ? $('#' + n + '_o').value.trim() : r.value; };
+document.addEventListener('change', e => { const o = e.target.type === 'radio' && document.getElementById(e.target.name + '_o'); if (o) o.classList.toggle('hide', e.target.value !== '__o'); });
 
 const $ = s => document.querySelector(s), E = s => String(s ?? '').replace(/[&<>"]/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]));
 let S = { tab: localStorage.kz_tab || 'my', tok: localStorage.kz_tok || '', me: null, users: [], kz: [], sy: [], f: {} };
@@ -115,7 +136,7 @@ async function api(action, data, msg) {
   return r.data;
 }
 function apply(d) {
-  if (d.token) { S.tok = d.token; localStorage.kz_tok = d.token; } S.me = d.me; S.users = d.users; S.kz = d.kaizen; S.sy = d.sayembara; }
+  if (d.token) { S.tok = d.token; localStorage.kz_tok = d.token; } S.me = d.me; S.users = d.users; S.kz = d.kaizen; S.sy = d.sayembara; normAll(); }
 
 /* ---------- login ---------- */
 let REG = false;
@@ -154,9 +175,8 @@ function img(file, max = 1000) {
     fr.readAsDataURL(file);
   });
 }
-function modal(html) { $('#md').innerHTML = html; $('#ov').classList.add('on'); }
+function modal(h, lock) { $('#md').innerHTML = (lock ? '' : '<button class="x" onclick="close_()" aria-label="Tutup">✕</button>') + h; $('#md').scrollTop = 0; $('#ov').classList.add('on'); }
 function close_() { $('#ov').classList.remove('on'); }
-$('#ov').onclick = e => { if (e.target.id === 'ov') close_(); };
 
 /* ---------- tabs, filter, list ---------- */
 const FIELDS = {
@@ -167,6 +187,8 @@ function go(t) {
   document.querySelectorAll('.tab').forEach(b => b.classList.toggle('on', b.dataset.t === S.tab));
   $('#me').outerHTML = avatar(S.me).replace('class="av', 'id="me" title="My profile" class="av'); $('#me').onclick = () => profile();
   $('#fab').textContent = S.tab === 'sy' ? '+ Sayembara baru' : '+ Kaizen baru'; $('#fab').onclick = () => S.tab === 'sy' ? newSy() : form(); $('#fab').classList.toggle('hide', S.tab === 'lb');
+  const TT = { my: ['Kaizen saya', `Halo, ${E(S.me.nama.split(' ')[0])} 👋 Yuk catat perbaikan kecilmu hari ini.`], all: ['Semua kaizen', 'Lihat ide perbaikan dari seluruh tim.'], sy: ['Sayembara', 'Masalah yang butuh bantuan tim. Satu sayembara bisa ditangani maksimal 3 orang.'], lb: ['Peringkat', 'Diurutkan dari rata-rata skor juri.'] };
+  $('#hd').innerHTML = `<h2>${TT[S.tab][0]}</h2><p>${TT[S.tab][1]}</p>`;
   const f = S.f[S.tab] = S.f[S.tab] || {}, divs = [...new Set(S.users.map(u => u.divisi).filter(Boolean))];
   const mk = {
     status: `<select data-k="status"><option value="">Semua status</option>${STAT.map(s => `<option ${f.status === s ? 'selected' : ''}>${s}</option>`).join('')}</select>`,
@@ -192,11 +214,13 @@ function draw() {
   $('#grid').innerHTML = a.length ? a.map(S.tab === 'sy' ? cardSy : cardKz).join('') : `<div class="empty" style="grid-column:1/-1">Belum ada data di sini.<br>Coba ubah filter atau tambah yang baru.</div>`;
   document.querySelectorAll('[data-id]').forEach(c => c.onclick = e => { if (e.target.closest('button')) return; S.tab === 'sy' ? 0 : (S.tab === 'my' ? form(c.dataset.id) : view(c.dataset.id)); });
   document.querySelectorAll('[data-take]').forEach(b => b.onclick = () => take(b.dataset.take));
+  document.querySelectorAll('.card').forEach((c, i) => c.style.setProperty('--i', Math.min(i, 12)));
 }
 const who = (e, d) => { const u = U(e); return `<div class="who">${avatar(u)}<div><b>${E(u.nama)}</b>${E(u.divisi)}</div></div>`; };
 const SL = { plan: 'Rencana', progress: 'Berjalan', hold: 'Tertahan', done: 'Selesai' }, SN = { plan: 1, progress: 2, hold: 2, done: 4 };
+const thumbs = k => (k.before || k.after) ? `<div class="th">${['before', 'after'].map(n => `<div style="${k[n] ? `background-image:url(${E(k[n])})` : ''}"><em>${n === 'before' ? 'Before' : 'After'}</em></div>`).join('')}</div>` : '';
 const cardKz = k => `<div class="card s-${k.status}" data-id="${k.id}">${who(k.email)}
-<div class="stg">${[1, 2, 3, 4].map(i => `<span class="${i <= SN[k.status] ? 'on' : ''}"></span>`).join('')}</div>
+<div class="stg">${[1, 2, 3, 4].map(i => `<span class="${i <= SN[k.status] ? 'on' : ''}"></span>`).join('')}</div>${thumbs(k)}
 <h3>${E(k.kategori)}</h3>${k.jenis === 'sayembara' ? `<span class="tag">★ ${E(k.masalah.split(':')[0])}</span>` : ''}
 <p>${E(k.isi) || '<i>Belum diisi</i>'}</p><div class="meta"><span>Due ${fdate(k.due)}</span><span class="pill">${SL[k.status] || k.status}</span></div>${dinilai(k)}</div>`;
 
@@ -212,7 +236,7 @@ function stats() {
   const me = S.kz.filter(k => k.email === S.me.email), n = s => me.filter(k => k.status === s).length, sc = me.filter(k => k.nilai && k.nilai.length).map(rata);
   $('#stats').innerHTML = S.tab === 'my' ? t('#e0e7ff', me.length, 'Kaizen saya') + t('#fff2c9', n('progress'), 'Sedang berjalan') + t('#d8f5ea', n('done'), 'Selesai') + t('#ffe3ef', fmt(sc.length ? sc.reduce((a, b) => a + b) / sc.length : null), 'Rata-rata skor juri')
     : S.tab === 'all' ? t('#e0e7ff', S.kz.length, 'Total kaizen') + t('#d8f5ea', S.kz.filter(k => k.status === 'done').length, 'Selesai') + t('#fff2c9', new Set(S.kz.map(k => k.email)).size, 'Kontributor') + t('#ffe3ef', S.kz.filter(scored).length, 'Sudah dinilai')
-    : S.tab === 'sy' ? t('#e0e7ff', S.sy.length, 'Sayembara') + t('#fff2c9', S.sy.filter(s => !s.ambilEmail).length, 'Butuh penangan') + t('#d8f5ea', S.sy.filter(s => s.ambilEmail).length, 'Sudah diambil') : '';
+    : S.tab === 'sy' ? t('#e0e7ff', S.sy.length, 'Sayembara') + t('#fff2c9', S.sy.filter(s => takers(s).length < 3).length, 'Masih butuh penangan') + t('#d8f5ea', S.sy.filter(s => s.ambilEmail).length, 'Sudah diambil') : '';
 }
 function board() {
   const m = {};
@@ -220,11 +244,14 @@ function board() {
   const rows = Object.values(m).map(r => ({ ...r, a: r.s.length ? r.s.reduce((x, y) => x + y) / r.s.length : null })).sort((x, y) => (y.a ?? -1) - (x.a ?? -1) || y.d - x.d || y.n - x.n);
   podium(rows, r => `${r.d}/${r.n} selesai`);
 }
-const cardSy = s => `<div class="card s-plan" style="cursor:default">${who(s.email)}<h3>Butuh bantuan</h3><p style="-webkit-line-clamp:5">${E(s.problem)}</p>
-<div class="meta"><span>Due ${fdate(s.due)}</span>${s.ambilEmail ? `<span class="pill">Sedang ditangani oleh ${E(s.ambilNama)}</span>` : `<button class="btn" data-take="${s.id}">Aku tangani ini</button>`}</div></div>`;
+const takers = s => String(s.ambilEmail || '').split(',').filter(Boolean);
+const cardSy = s => { const t = takers(s), mine = t.includes(S.me.email);
+  return `<div class="card s-plan" style="cursor:default">${who(s.email)}<h3>Butuh bantuan</h3><p style="-webkit-line-clamp:5">${E(s.problem)}</p>
+${t.length ? `<div class="tk"><small>Sedang ditangani oleh (${t.length}/3)</small>${t.map(e => who(e)).join('')}</div>` : ''}
+<div class="meta"><span>Due ${fdate(s.due)}</span>${mine ? '<span class="pill done">Kamu ikut menangani</span>' : t.length >= 3 ? '<span class="pill hold">Penuh 3/3</span>' : `<button class="btn" data-take="${s.id}">Aku tangani ini</button>`}</div></div>`; };
 
 async function take(id) {
-  if (!confirm('Ambil sayembara ini? Akan masuk ke My Kaizen kamu.')) return;
+  if (!confirm('Ikut menangani sayembara ini? Maksimal 3 orang, dan akan masuk ke My Kaizen kamu.')) return;
   apply(await api('takeSayembara', { id }, 'Mengambil sayembara')); toast('Sayembara masuk ke My Kaizen'); go('my');
 }
 
@@ -246,11 +273,12 @@ function view(id) {
 const DK = () => 'kz_draft_' + S.me.email;
 function form(id) {
   const k = id ? S.kz.find(x => x.id === id) : null, dr = !id && JSON.parse(localStorage[DK()] || 'null'), v = k || dr || {};
-  const isCat = !v.kategori || CATS.includes(v.kategori), im = { before: v.before || '', after: v.after || '' };
+  const sel = String(v.kategori || '').split(', ').filter(Boolean), oth = sel.filter(c => !CATS.includes(c)).join(', '), im = { before: v.before || '', after: v.after || '' };
   modal(`<h2>${k ? 'Update kaizen' : 'Kaizen baru'}</h2>${k ? nilaiBox(k) : ''}${k && k.masalah ? `<p class="tag">${E(k.masalah)}</p>` : ''}
-<label>Kamu dari divisi mana</label><input id="f_div" value="${E(v.divisi || S.me.divisi)}">
-<label>Kaizen untuk apa</label><select id="f_cat">${CATS.map(c => `<option ${v.kategori === c ? 'selected' : ''}>${c}</option>`).join('')}<option value="__o" ${isCat ? '' : 'selected'}>Isi sendiri…</option></select>
-<input id="f_oth" class="${isCat ? 'hide' : ''}" placeholder="Tulis kategorimu" value="${isCat ? '' : E(v.kategori)}" style="margin-top:8px">
+<label>Kamu dari divisi mana</label>${divPick('fdiv', v.divisi || S.me.divisi)}
+<label>Kaizen untuk apa (boleh pilih lebih dari satu)</label>
+<div class="chk">${CATS.map(c => `<label class="cb"><input type="checkbox" name="cat" value="${c}" ${sel.includes(c) ? 'checked' : ''}><span>${c}</span></label>`).join('')}<label class="cb"><input type="checkbox" id="c_o" ${oth ? 'checked' : ''}><span>Isi sendiri</span></label></div>
+<input id="f_oth" class="${oth ? '' : 'hide'}" placeholder="Tulis kategorimu" value="${E(oth)}" style="margin-top:8px">
 <label>Apa kaizenmu</label><textarea id="f_isi">${E(v.isi)}</textarea>
 <div class="two"><div><label>Rencana selesai tanggal</label><input type="date" id="f_due" value="${v.due || ''}"></div>
 <div><label>Status</label><select id="f_st">${STAT.map(s => `<option ${v.status === s ? 'selected' : ''}>${s}</option>`).join('')}</select></div></div>
@@ -261,13 +289,13 @@ function form(id) {
   const paint = n => { const p = $('#p_' + n); if (im[n]) { p.style.backgroundImage = `url(${im[n]})`; p.textContent = ''; } };
   ['before', 'after'].forEach(n => { paint(n); $('#p_' + n).onclick = () => { cur = n; $('#fi').click(); }; });
   $('#fi').onchange = async e => { if (e.target.files[0]) { im[cur] = await img(e.target.files[0]); paint(cur); e.target.value = ''; draft(); } };
-  $('#f_cat').onchange = () => $('#f_oth').classList.toggle('hide', $('#f_cat').value !== '__o');
-  const get = () => ({ id: id || '', divisi: $('#f_div').value.trim(), kategori: $('#f_cat').value === '__o' ? $('#f_oth').value.trim() : $('#f_cat').value, isi: $('#f_isi').value.trim(), due: $('#f_due').value, status: $('#f_st').value, before: im.before, after: im.after });
+  $('#c_o').onchange = () => $('#f_oth').classList.toggle('hide', !$('#c_o').checked);
+  const get = () => ({ id: id || '', divisi: divGet('fdiv'), kategori: [...document.querySelectorAll('[name=cat]:checked')].map(x => x.value).concat($('#c_o').checked && $('#f_oth').value.trim() ? [$('#f_oth').value.trim()] : []).join(', '), isi: $('#f_isi').value.trim(), due: $('#f_due').value, status: $('#f_st').value, before: im.before, after: im.after });
   function draft() { if (id) return; try { localStorage[DK()] = JSON.stringify(get()); $('#dr').textContent = 'Draft tersimpan otomatis ✓'; } catch (e) { } }
   $('#md').oninput = draft;
   $('#sv').onclick = async () => {
-    const d = get(); if (!d.divisi || !d.kategori || !d.isi || !d.due) return toast('Divisi, kategori, isi, dan tanggal wajib diisi');
-    apply(await api('saveKaizen', d, 'Menyimpan kaizen & mengunggah foto')); localStorage.removeItem(DK()); close_(); toast('Kaizen tersimpan ✓'); go('my');
+    const d = get(); if (!d.divisi || !d.kategori || !d.isi || !d.due) return toast('Divisi, minimal satu kategori, isi, dan tanggal wajib diisi');
+    apply(await api('saveKaizen', d, 'Menyimpan kaizen & mengunggah foto')); localStorage.removeItem(DK()); close_(); toast('Kaizen tersimpan ✓'); go('my'); if (d.status === 'done') setTimeout(confetti, 350);
   };
 }
 
@@ -283,16 +311,21 @@ function newSy() {
   };
 }
 
+function confetti() {
+  const c = ['#4f6bff', '#27c6a3', '#ffd23f', '#ff6b9a'];
+  for (let i = 0; i < 44; i++) { const p = document.createElement('i'); p.className = 'cf'; p.style.cssText = `left:${50 + (Math.random() - .5) * 20}%;background:${c[i % 4]};--x:${(Math.random() - .5) * 640}px;--r:${Math.random() * 720}deg;animation-delay:${Math.random() * .15}s`; document.body.appendChild(p); setTimeout(() => p.remove(), 1800); }
+}
+
 /* ---------- profil ---------- */
 function profile(first) {
   const m = S.me || { nama: '', divisi: '', foto: '' }; let foto = '';
   modal(`<h2>${first ? 'Selamat datang! Isi profilmu' : 'My profile'}</h2><div style="display:flex;gap:14px;align-items:center"><div class="ph" id="p_f" style="width:90px;aspect-ratio:1;border-radius:50%;flex:none;${m.foto ? `background-image:url(${E(m.foto)})` : ''}">${m.foto ? '' : 'Foto'}</div><div style="flex:1;color:var(--mut);font-size:13px">Login sebagai<br><b style="color:var(--ink)">${E(S.me ? S.me.email : 'akun Google kamu')}</b></div></div>
-<input type="file" id="fi" accept="image/*" class="hide"><label>Nama</label><input id="pn" value="${E(m.nama)}"><label>Divisi</label><input id="pd" value="${E(m.divisi)}"><label>${m.wajibGanti ? 'Buat password baru (wajib)' : 'Ganti password (kosongkan jika tidak)'}</label><input id="pw" type="password" placeholder="Minimal 5 karakter" autocomplete="new-password">
-<div class="act">${first ? '' : '<button class="btn g" onclick="logout()">Logout</button><button class="btn g" onclick="close_()">Tutup</button>'}<button class="btn" id="ps">Simpan</button></div>`);
+<input type="file" id="fi" accept="image/*" class="hide"><label>Nama</label><input id="pn" value="${E(m.nama)}"><label>Divisi</label>${divPick('pdiv', m.divisi)}<label>${m.wajibGanti ? 'Buat password baru (wajib)' : 'Ganti password (kosongkan jika tidak)'}</label><input id="pw" type="password" placeholder="Minimal 5 karakter" autocomplete="new-password">
+<div class="act">${first ? '' : '<button class="btn g" onclick="logout()">Logout</button><button class="btn g" onclick="close_()">Tutup</button>'}<button class="btn" id="ps">Simpan</button></div>`, first);
   $('#p_f').onclick = () => $('#fi').click();
   $('#fi').onchange = async e => { if (e.target.files[0]) { foto = await img(e.target.files[0], 400); $('#p_f').style.backgroundImage = `url(${foto})`; $('#p_f').textContent = ''; } };
   $('#ps').onclick = async () => {
-    const d = { nama: $('#pn').value, divisi: $('#pd').value, foto, sandi: $('#pw').value }; if (!d.nama.trim() || !d.divisi.trim()) return toast('Nama dan divisi wajib diisi'); if (m.wajibGanti && !d.sandi) return toast('Buat password baru dulu ya');
+    const d = { nama: $('#pn').value, divisi: divGet('pdiv'), foto, sandi: $('#pw').value }; if (!d.nama.trim() || !d.divisi.trim()) return toast('Nama dan divisi wajib diisi'); if (m.wajibGanti && !d.sandi) return toast('Buat password baru dulu ya');
     apply(await api('saveProfile', d, 'Menyimpan profil')); close_(); toast('Profil tersimpan ✓'); go();
   };
 }
