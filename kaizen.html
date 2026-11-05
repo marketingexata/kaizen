@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="id"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<html lang="id"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <title>Kaizen</title>
 <link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,600;12..96,700&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
 <style>
@@ -83,6 +83,17 @@ tr.sub td{background:var(--t0);font-weight:700}tr.dv td{background:var(--ink);co
 .tab{flex:1;padding:10px 2px;font-size:12px;text-align:center}.fab{bottom:84px;right:14px}#toast{bottom:96px}
 .ov{align-items:end;padding:0}.modal{width:100%;border-radius:28px 28px 0 0;max-height:90vh;transform:translateY(100%)}.ov.on .modal{transform:none}}
 .modal h2{padding-right:44px}.x{position:sticky;top:0;z-index:3;display:grid;place-items:center;width:34px;height:34px;margin:0 0 -34px auto;border:0;border-radius:50%;background:var(--t1);color:var(--ink);font-size:15px;cursor:pointer;transition:.2s}.x:hover{transform:rotate(90deg)}
+/* ---- HP: tab membeku di bawah header, tepi layar lebih lega (aman untuk notch iPhone) ---- */
+@media(max-width:640px){
+header{padding:calc(env(safe-area-inset-top,0px) + 10px) calc(env(safe-area-inset-right,0px) + 16px) 10px calc(env(safe-area-inset-left,0px) + 16px);gap:10px 12px;backdrop-filter:none;background:#fff}
+.tabs{position:static;order:3;width:100%;overflow-x:auto;justify-content:flex-start;background:var(--t0);backdrop-filter:none;border:0;box-shadow:none;z-index:auto}
+.tab{flex:1;padding:9px 12px;font-size:13px;white-space:nowrap;text-align:center}
+main{padding:20px calc(env(safe-area-inset-right,0px) + 18px) calc(env(safe-area-inset-bottom,0px) + 100px) calc(env(safe-area-inset-left,0px) + 18px)}
+.fab{right:calc(env(safe-area-inset-right,0px) + 18px);bottom:calc(env(safe-area-inset-bottom,0px) + 20px)}
+#toast{bottom:calc(env(safe-area-inset-bottom,0px) + 24px);max-width:calc(100vw - 36px);text-align:center}
+.modal{padding:22px 18px calc(env(safe-area-inset-bottom,0px) + 22px)}
+#login{padding:calc(env(safe-area-inset-top,0px) + 24px) 22px calc(env(safe-area-inset-bottom,0px) + 24px)}
+}
 </style></head><body>
 
 <section id="login"><div style="width:min(380px,100%)"><h1>Kaizen.<br>Perbaikan kecil,<br>dampak besar.</h1>
