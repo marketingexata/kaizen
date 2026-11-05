@@ -36,7 +36,7 @@ main{max-width:1100px;margin:auto;padding:26px 20px 100px}
 .meta{display:flex;justify-content:space-between;align-items:center;font-size:13px;color:var(--mut);margin-top:auto;gap:8px;flex-wrap:wrap}
 .pill{display:inline-flex;align-items:center;background:var(--c0,var(--t0));color:var(--c1,var(--ink));padding:3px 11px;border-radius:99px;font-weight:700;font-size:12px}
 .pill::before{content:"";width:6px;height:6px;border-radius:50%;background:currentColor;margin-right:6px}
-.tag{font-size:12px;font-weight:700;color:var(--acc)}
+.btn.dn{background:#fff;color:#c23b3b;border:1px solid #f3c4c4}.btn.dn:hover{box-shadow:0 6px 14px #c23b3b22}.tag{font-size:12px;font-weight:700;color:var(--acc)}
 .ok{background:var(--t2);color:#0e7a5c;font-weight:700;font-size:12px;padding:4px 11px;border-radius:99px;align-self:flex-start}
 .nb{background:var(--t0);border-radius:14px;padding:12px;margin:10px 0}.nb p{margin-top:6px}.empty{text-align:center;color:var(--mut);padding:60px 0}
 .sc{background:var(--t2);color:#0e7a5c;border-radius:99px;padding:2px 12px;font:var(--fw) 18px var(--fd)}.sc.no{background:var(--t0);color:var(--mut);font:600 12px var(--fb);padding:5px 11px}
@@ -87,7 +87,7 @@ tr.sub td{background:var(--t0);font-weight:700}tr.dv td{background:var(--ink);co
 
 <section id="login"><div style="width:min(380px,100%)"><h1>Kaizen.<br>Perbaikan kecil,<br>dampak besar.</h1>
 <div class="lf"><input id="l_e" type="email" placeholder="Email kamu" autocomplete="username"><input id="l_n" class="hide" placeholder="Nama lengkap"><input id="l_p" type="password" placeholder="Password" autocomplete="current-password">
-<button class="btn" id="l_go">Masuk</button><a href="#" id="l_sw">Belum punya akun? Daftar</a><small id="l_h" class="hide" style="color:var(--mut)">Password awal 12345. Kamu akan diminta menggantinya setelah masuk.</small></div></div></section>
+<button class="btn" id="l_go">Masuk</button><a href="#" id="l_fp">Lupa password?</a><a href="#" id="l_sw">Belum punya akun? Daftar</a><small id="l_h" class="hide" style="color:var(--mut)">Password awal 12345. Kamu akan diminta menggantinya setelah masuk.</small></div></div></section>
 
 <div id="app" class="hide">
 <header><h1><span class="lg">K</span>Kaizen</h1>
@@ -143,9 +143,11 @@ let REG = false;
 window.onload = () => {
   $('#l_sw').onclick = e => {
     e.preventDefault(); REG = !REG;
-    $('#l_n').classList.toggle('hide', !REG); $('#l_p').classList.toggle('hide', REG); $('#l_h').classList.toggle('hide', !REG);
+    $('#l_n').classList.toggle('hide', !REG); $('#l_p').classList.toggle('hide', REG); $('#l_h').classList.toggle('hide', !REG); $('#l_fp').classList.toggle('hide', REG);
     $('#l_go').textContent = REG ? 'Daftar' : 'Masuk'; $('#l_sw').textContent = REG ? 'Sudah punya akun? Masuk' : 'Belum punya akun? Daftar';
   };
+    const fp = $('#l_fp'); fp.onclick = async e => { e.preventDefault(); const email = $('#l_e').value.trim().toLowerCase(); if (!email) return toast('Isi email dulu, lalu klik Lupa password');
+      await api('forgot', { email }, 'Mengirim password sementara'); toast('Jika email terdaftar, password sementara sudah dikirim. Cek inbox dan spam.'); };
   $('#l_go').onclick = async () => {
     const email = $('#l_e').value.trim().toLowerCase(), nama = $('#l_n').value.trim(), sandi = $('#l_p').value;
     if (!email || (REG ? !nama : !sandi)) return toast(REG ? 'Isi email dan nama' : 'Isi email dan password');
@@ -214,6 +216,7 @@ function draw() {
   $('#grid').innerHTML = a.length ? a.map(S.tab === 'sy' ? cardSy : cardKz).join('') : `<div class="empty" style="grid-column:1/-1">Belum ada data di sini.<br>Coba ubah filter atau tambah yang baru.</div>`;
   document.querySelectorAll('[data-id]').forEach(c => c.onclick = e => { if (e.target.closest('button')) return; S.tab === 'sy' ? 0 : (S.tab === 'my' ? form(c.dataset.id) : view(c.dataset.id)); });
   document.querySelectorAll('[data-take]').forEach(b => b.onclick = () => take(b.dataset.take));
+  document.querySelectorAll('[data-delsy]').forEach(b => b.onclick = async () => { if (!confirm('Hapus sayembara ini?')) return; apply(await api('deleteSayembara', { id: b.dataset.delsy }, 'Menghapus sayembara')); toast('Sayembara dihapus'); go('sy'); });
   document.querySelectorAll('.card').forEach((c, i) => c.style.setProperty('--i', Math.min(i, 12)));
 }
 const who = (e, d) => { const u = U(e); return `<div class="who">${avatar(u)}<div><b>${E(u.nama)}</b>${E(u.divisi)}</div></div>`; };
@@ -248,7 +251,7 @@ const takers = s => String(s.ambilEmail || '').split(',').filter(Boolean);
 const cardSy = s => { const t = takers(s), mine = t.includes(S.me.email);
   return `<div class="card s-plan" style="cursor:default">${who(s.email)}<h3>Butuh bantuan</h3><p style="-webkit-line-clamp:5">${E(s.problem)}</p>
 ${t.length ? `<div class="tk"><small>Sedang ditangani oleh (${t.length}/3)</small>${t.map(e => who(e)).join('')}</div>` : ''}
-<div class="meta"><span>Due ${fdate(s.due)}</span>${mine ? '<span class="pill done">Kamu ikut menangani</span>' : t.length >= 3 ? '<span class="pill hold">Penuh 3/3</span>' : `<button class="btn" data-take="${s.id}">Aku tangani ini</button>`}</div></div>`; };
+<div class="meta"><span>Due ${fdate(s.due)}</span>${mine ? '<span class="pill done">Kamu ikut menangani</span>' : t.length >= 3 ? '<span class="pill hold">Penuh 3/3</span>' : `<button class="btn" data-take="${s.id}">Aku tangani ini</button>`}</div>${s.email === S.me.email && !t.length ? `<button class="btn dn" data-delsy="${s.id}">Hapus sayembaraku</button>` : ''}</div>`; };
 
 async function take(id) {
   if (!confirm('Ikut menangani sayembara ini? Maksimal 3 orang, dan akan masuk ke My Kaizen kamu.')) return;
@@ -284,7 +287,7 @@ function form(id) {
 <div><label>Status</label><select id="f_st">${STAT.map(s => `<option ${v.status === s ? 'selected' : ''}>${s}</option>`).join('')}</select></div></div>
 <div class="two"><div><label>Foto before</label><div class="ph" id="p_before">Ketuk untuk unggah</div></div><div><label>Foto after</label><div class="ph" id="p_after">Ketuk untuk unggah</div></div></div>
 <input type="file" id="fi" accept="image/*" class="hide"><div class="dr" id="dr">${dr ? 'Draft yang belum selesai dikembalikan.' : ''}</div>
-<div class="act"><button class="btn g" onclick="close_()">Batal</button><button class="btn" id="sv">Simpan</button></div>`);
+<div class="act">${k ? '<button class="btn dn" id="dl" style="margin-right:auto">Hapus</button>' : ''}<button class="btn g" onclick="close_()">Batal</button><button class="btn" id="sv">Simpan</button></div>`);
   let cur;
   const paint = n => { const p = $('#p_' + n); if (im[n]) { p.style.backgroundImage = `url(${im[n]})`; p.textContent = ''; } };
   ['before', 'after'].forEach(n => { paint(n); $('#p_' + n).onclick = () => { cur = n; $('#fi').click(); }; });
@@ -292,6 +295,7 @@ function form(id) {
   $('#c_o').onchange = () => $('#f_oth').classList.toggle('hide', !$('#c_o').checked);
   const get = () => ({ id: id || '', divisi: divGet('fdiv'), kategori: [...document.querySelectorAll('[name=cat]:checked')].map(x => x.value).concat($('#c_o').checked && $('#f_oth').value.trim() ? [$('#f_oth').value.trim()] : []).join(', '), isi: $('#f_isi').value.trim(), due: $('#f_due').value, status: $('#f_st').value, before: im.before, after: im.after });
   function draft() { if (id) return; try { localStorage[DK()] = JSON.stringify(get()); $('#dr').textContent = 'Draft tersimpan otomatis ✓'; } catch (e) { } }
+  if (k) $('#dl').onclick = async () => { if (!confirm('Hapus kaizen ini? Tindakan ini tidak bisa dibatalkan.')) return; apply(await api('deleteKaizen', { id }, 'Menghapus kaizen')); close_(); toast('Kaizen dihapus'); go('my'); };
   $('#md').oninput = draft;
   $('#sv').onclick = async () => {
     const d = get(); if (!d.divisi || !d.kategori || !d.isi || !d.due) return toast('Divisi, minimal satu kategori, isi, dan tanggal wajib diisi');
