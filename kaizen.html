@@ -94,6 +94,8 @@ main{padding:20px calc(env(safe-area-inset-right,0px) + 18px) calc(env(safe-area
 .modal{padding:22px 18px calc(env(safe-area-inset-bottom,0px) + 22px)}
 #login{padding:calc(env(safe-area-inset-top,0px) + 24px) 22px calc(env(safe-area-inset-bottom,0px) + 24px)}
 }
+.card p.clp{-webkit-line-clamp:4;white-space:pre-line}.card p.clp.open{display:block;overflow:visible}
+.mr{align-self:flex-start;background:none;border:0;padding:0;color:var(--acc);font-weight:700;font-size:13px;cursor:pointer}.mr:hover{text-decoration:underline}
 </style></head><body>
 
 <section id="login"><div style="width:min(380px,100%)"><h1>Kaizen.<br>Perbaikan kecil,<br>dampak besar.</h1>
@@ -229,6 +231,7 @@ function draw() {
   document.querySelectorAll('[data-take]').forEach(b => b.onclick = () => take(b.dataset.take));
   document.querySelectorAll('[data-delsy]').forEach(b => b.onclick = async () => { if (!confirm('Hapus sayembara ini?')) return; apply(await api('deleteSayembara', { id: b.dataset.delsy }, 'Menghapus sayembara')); toast('Sayembara dihapus'); go('sy'); });
   document.querySelectorAll('.card').forEach((c, i) => c.style.setProperty('--i', Math.min(i, 12)));
+  document.querySelectorAll('.clp').forEach(p => { const b = p.nextElementSibling; if (p.scrollHeight > p.clientHeight + 1) { b.classList.remove('hide'); b.onclick = () => { const o = p.classList.toggle('open'); b.textContent = o ? 'Tutup' : 'Lihat selengkapnya'; }; } });
 }
 const who = (e, d) => { const u = U(e); return `<div class="who">${avatar(u)}<div><b>${E(u.nama)}</b>${E(u.divisi)}</div></div>`; };
 const SL = { plan: 'Rencana', progress: 'Berjalan', hold: 'Tertahan', done: 'Selesai' }, SN = { plan: 1, progress: 2, hold: 2, done: 4 };
@@ -260,7 +263,7 @@ function board() {
 }
 const takers = s => String(s.ambilEmail || '').split(',').filter(Boolean);
 const cardSy = s => { const t = takers(s), mine = t.includes(S.me.email);
-  return `<div class="card s-plan" style="cursor:default">${who(s.email)}<h3>Butuh bantuan</h3><p style="-webkit-line-clamp:5">${E(s.problem)}</p>
+  return `<div class="card s-plan" style="cursor:default">${who(s.email)}<h3>Butuh bantuan</h3><p class="clp">${E(s.problem)}</p><button type="button" class="mr hide">Lihat selengkapnya</button>
 ${t.length ? `<div class="tk"><small>Sedang ditangani oleh (${t.length}/3)</small>${t.map(e => who(e)).join('')}</div>` : ''}
 <div class="meta"><span>Due ${fdate(s.due)}</span>${mine ? '<span class="pill done">Kamu ikut menangani</span>' : t.length >= 3 ? '<span class="pill hold">Penuh 3/3</span>' : `<button class="btn" data-take="${s.id}">Aku tangani ini</button>`}</div>${s.email === S.me.email && !t.length ? `<button class="btn dn" data-delsy="${s.id}">Hapus sayembaraku</button>` : ''}</div>`; };
 
