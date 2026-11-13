@@ -96,6 +96,15 @@ main{padding:20px calc(env(safe-area-inset-right,0px) + 18px) calc(env(safe-area
 }
 .card p.clp{-webkit-line-clamp:4;white-space:pre-line}.card p.clp.open{display:block;overflow:visible}
 .mr{align-self:flex-start;background:none;border:0;padding:0;color:var(--acc);font-weight:700;font-size:13px;cursor:pointer}.mr:hover{text-decoration:underline}
+.nt{background:#fff8e1;border:1px solid #ffe29a;border-radius:18px;padding:14px 16px;margin-bottom:12px;display:flex;gap:12px;align-items:center;justify-content:space-between;flex-wrap:wrap}.nt.rj{background:#fff1f1;border-color:#f3c4c4}.nt>div:first-child{flex:1;min-width:220px}.ntb{display:flex;gap:8px;flex-wrap:wrap}
+.pe{display:flex;flex-wrap:wrap;gap:2px 12px;font-size:12px;color:var(--mut)}.pe b{color:var(--ink)}
+.jn{background:#fff8e1;border-radius:12px;padding:8px 12px;font-size:13px;display:-webkit-box;-webkit-line-clamp:3;-webkit-box-orient:vertical;overflow:hidden}
+.zm{position:fixed;inset:0;background:#0b0f1ef2;z-index:80;display:none;touch-action:none}.zm.on{display:block}
+#zs{position:absolute;inset:0;overflow:hidden;display:grid;place-items:center;touch-action:none;cursor:grab}
+#zi{max-width:94vw;max-height:84vh;user-select:none;-webkit-user-drag:none;will-change:transform}
+.zc{position:absolute;left:50%;bottom:calc(env(safe-area-inset-bottom,0px) + 18px);transform:translateX(-50%);display:flex;gap:8px;z-index:2}
+.zc button{border:0;border-radius:99px;background:#fffffff2;padding:10px 18px;font-weight:700;cursor:pointer;color:#222}
+.zx{position:absolute;top:calc(env(safe-area-inset-top,0px) + 14px);right:14px;margin:0;z-index:3;background:#fffffff2}
 </style></head><body>
 
 <section id="login"><div style="width:min(380px,100%)"><h1>Kaizen.<br>Perbaikan kecil,<br>dampak besar.</h1>
@@ -104,14 +113,15 @@ main{padding:20px calc(env(safe-area-inset-right,0px) + 18px) calc(env(safe-area
 
 <div id="app" class="hide">
 <header><h1><span class="lg">K</span>Kaizen</h1>
-<nav class="tabs"><button class="tab" data-t="my">My Kaizen</button><button class="tab" data-t="all">All Kaizen</button><button class="tab" data-t="sy">Sayembara</button><button class="tab" data-t="lb">Peringkat</button></nav>
+<nav class="tabs"><button class="tab" data-t="my">My Kaizen</button><button class="tab" data-t="all">All Kaizen</button><button class="tab" data-t="ide">Ide Kaizen</button><button class="tab" data-t="sy">Sayembara</button><button class="tab" data-t="lb">Peringkat</button></nav>
 <span class="sp"></span><div class="av" id="me" title="My profile"></div></header>
-<main><div id="hd"></div><div id="stats"></div><div class="bar" id="bar"></div><div class="grid" id="grid"></div></main>
+<main><div id="hd"></div><div id="nt"></div><div id="stats"></div><div class="bar" id="bar"></div><div class="grid" id="grid"></div></main>
 <button class="btn fab" id="fab"></button>
 </div>
 
 <div class="ov" id="ov"><div class="modal" id="md"></div></div>
 <div id="ld"><div class="lb"><div id="lp">0%</div><div class="trk"><div id="lf"></div></div><b>Tunggu ya…</b><div id="lm" style="color:var(--mut);font-size:13px"></div></div></div>
+<div class="zm" id="zm"><div id="zs"><img id="zi" alt="Foto"></div><button class="x zx" onclick="zoomClose()" aria-label="Tutup">✕</button><div class="zc"><button onclick="zoomBy(1/1.4)">−</button><button onclick="zoomReset()">Reset</button><button onclick="zoomBy(1.4)">+</button></div></div>
 <div id="toast"></div>
 
 <script>
@@ -182,7 +192,7 @@ function logout() { localStorage.removeItem('kz_tok'); location.reload(); }
 const U = e => S.users.find(u => u.email === e) || { nama: e, divisi: '', foto: '' };
 const avatar = (u, cls = '') => u.foto ? `<img class="av ${cls}" src="${E(u.foto)}">` : `<div class="av ${cls}">${E((u.nama || '?')[0]).toUpperCase()}</div>`;
 const fdate = d => d ? new Date(d + 'T00:00').toLocaleDateString('id-ID', { day: 'numeric', month: 'short', year: 'numeric' }) : '-';
-function img(file, max = 1000) {
+function img(file, max = 1600) {
   return new Promise(res => {
     const fr = new FileReader(); fr.onload = () => { const i = new Image(); i.onload = () => {
       const k = Math.min(1, max / Math.max(i.width, i.height)), c = document.createElement('canvas'); c.width = i.width * k; c.height = i.height * k;
@@ -195,18 +205,18 @@ function close_() { $('#ov').classList.remove('on'); }
 
 /* ---------- tabs, filter, list ---------- */
 const FIELDS = {
-  my: ['status', 'jenis', 'nilai', 'due', 'sort', 'q'], all: ['divisi', 'jenis', 'sort', 'q'], sy: ['divisi', 'sort', 'q'], lb: []
+  my: ['status', 'jenis', 'nilai', 'due', 'sort', 'q'], all: ['divisi', 'jenis', 'sort', 'q'], ide: ['status', 'divisi', 'jenis', 'sort', 'q'], sy: ['divisi', 'sort', 'q'], lb: []
 };
 function go(t) {
   if (t) { S.tab = t; localStorage.kz_tab = t; }
   document.querySelectorAll('.tab').forEach(b => b.classList.toggle('on', b.dataset.t === S.tab));
   $('#me').outerHTML = avatar(S.me).replace('class="av', 'id="me" title="My profile" class="av'); $('#me').onclick = () => profile();
   $('#fab').textContent = S.tab === 'sy' ? '+ Sayembara baru' : '+ Kaizen baru'; $('#fab').onclick = () => S.tab === 'sy' ? newSy() : form(); $('#fab').classList.toggle('hide', S.tab === 'lb');
-  const TT = { my: ['Kaizen saya', `Halo, ${E(S.me.nama.split(' ')[0])} 👋 Yuk catat perbaikan kecilmu hari ini.`], all: ['Semua kaizen', 'Lihat ide perbaikan dari seluruh tim.'], sy: ['Sayembara', 'Masalah yang butuh bantuan tim. Satu sayembara bisa ditangani maksimal 3 orang.'], lb: ['Peringkat', 'Diurutkan dari rata-rata skor juri.'] };
+  const TT = { my: ['Kaizen saya', `Halo, ${E(S.me.nama.split(' ')[0])} 👋 Yuk catat perbaikan kecilmu hari ini.`], all: ['Semua kaizen', 'Kaizen yang sudah selesai (done) dari seluruh tim.'], ide: ['Ide kaizen', 'Ide yang masih berjalan (plan, progress, hold) dan belum selesai.'], sy: ['Sayembara', 'Masalah yang butuh bantuan tim. Satu sayembara bisa ditangani maksimal 3 orang.'], lb: ['Peringkat', 'Diurutkan dari rata-rata skor juri.'] };
   $('#hd').innerHTML = `<h2>${TT[S.tab][0]}</h2><p>${TT[S.tab][1]}</p>`;
   const f = S.f[S.tab] = S.f[S.tab] || {}, divs = [...new Set(S.users.map(u => u.divisi).filter(Boolean))];
   const mk = {
-    status: `<select data-k="status"><option value="">Semua status</option>${STAT.map(s => `<option ${f.status === s ? 'selected' : ''}>${s}</option>`).join('')}</select>`,
+    status: `<select data-k="status"><option value="">Semua status</option>${(S.tab === 'ide' ? STAT.slice(0, 3) : STAT).map(s => `<option ${f.status === s ? 'selected' : ''}>${s}</option>`).join('')}</select>`,
     jenis: `<select data-k="jenis"><option value="">Pribadi + sayembara</option><option value="pribadi" ${f.jenis === 'pribadi' ? 'selected' : ''}>Pribadi</option><option value="sayembara" ${f.jenis === 'sayembara' ? 'selected' : ''}>Sayembara</option></select>`,
     nilai: `<select data-k="nilai"><option value="">Semua (sudah/belum dinilai)</option><option value="y" ${f.nilai === 'y' ? 'selected' : ''}>Sudah dinilai</option><option value="n" ${f.nilai === 'n' ? 'selected' : ''}>Belum dinilai</option></select>`,
     divisi: `<select data-k="divisi"><option value="">Semua divisi</option>${divs.map(d => `<option ${f.divisi === d ? 'selected' : ''}>${E(d)}</option>`).join('')}</select>`,
@@ -221,9 +231,9 @@ function go(t) {
 document.querySelectorAll('.tab').forEach(b => b.onclick = () => go(b.dataset.t));
 
 function draw() {
-  stats(); if (S.tab === 'lb') return board();
+  stats(); notif(); if (S.tab === 'lb') return board();
   const f = S.f[S.tab] || {}, q = (f.q || '').toLowerCase();
-  let a = S.tab === 'sy' ? S.sy : S.kz.filter(k => S.tab === 'all' || k.email === S.me.email);
+  let a = S.tab === 'sy' ? S.sy : S.kz.filter(k => S.tab === 'all' ? k.status === 'done' : S.tab === 'ide' ? k.status !== 'done' : isMine(k));
   a = a.filter(x => (!f.status || x.status === f.status) && (!f.nilai || (f.nilai === 'y') === scored(x)) && (!f.jenis || x.jenis === f.jenis) && (!f.divisi || x.divisi === f.divisi) && (!f.due || (x.due && x.due <= f.due)) && (!q || JSON.stringify(x).toLowerCase().includes(q)));
   a.sort((x, y) => f.sort === 'old' ? x.dibuat - y.dibuat : y.dibuat - x.dibuat);
   $('#grid').innerHTML = a.length ? a.map(S.tab === 'sy' ? cardSy : cardKz).join('') : `<div class="empty" style="grid-column:1/-1">Belum ada data di sini.<br>Coba ubah filter atau tambah yang baru.</div>`;
@@ -235,11 +245,11 @@ function draw() {
 }
 const who = (e, d) => { const u = U(e); return `<div class="who">${avatar(u)}<div><b>${E(u.nama)}</b>${E(u.divisi)}</div></div>`; };
 const SL = { plan: 'Rencana', progress: 'Berjalan', hold: 'Tertahan', done: 'Selesai' }, SN = { plan: 1, progress: 2, hold: 2, done: 4 };
-const thumbs = k => (k.before || k.after) ? `<div class="th">${['before', 'after'].map(n => `<div style="${k[n] ? `background-image:url(${E(k[n])})` : ''}"><em>${n === 'before' ? 'Before' : 'After'}</em></div>`).join('')}</div>` : '';
+const thumbs = k => (k.before || k.after) ? `<div class="th">${['before', 'after'].map(n => `<div ${k[n] ? `data-zoom="${E(k[n])}" title="Klik untuk perbesar" ` : ''}style="${k[n] ? `background-image:url(${E(k[n])});cursor:zoom-in` : ''}"><em>${n === 'before' ? 'Before' : 'After'}</em></div>`).join('')}</div>` : '';
 const cardKz = k => `<div class="card s-${k.status}" data-id="${k.id}">${who(k.email)}
 <div class="stg">${[1, 2, 3, 4].map(i => `<span class="${i <= SN[k.status] ? 'on' : ''}"></span>`).join('')}</div>${thumbs(k)}
-<h3>${E(k.kategori)}</h3>${k.jenis === 'sayembara' ? `<span class="tag">★ ${E(k.masalah.split(':')[0])}</span>` : ''}
-<p>${E(k.isi) || '<i>Belum diisi</i>'}</p><div class="meta"><span>Due ${fdate(k.due)}</span><span class="pill">${SL[k.status] || k.status}</span></div>${dinilai(k)}</div>`;
+<h3>${E(k.kategori)}</h3>${roleTag(k)}${k.jenis === 'sayembara' ? `<span class="tag">★ ${E(k.masalah.split(':')[0])}</span>` : ''}
+<p>${E(k.isi) || '<i>Belum diisi</i>'}</p><div class="meta"><span>Due ${fdate(k.due)}</span><span class="pill">${SL[k.status] || k.status}</span></div>${dinilai(k)}${juriNote(k)}${peran(k)}</div>`;
 
 const t = (c, v, l) => `<div class="st" style="--c:${c}"><i></i><b>${v}</b><span>${l}</span></div>`;
 const fmt = v => v == null ? '–' : (Math.round(v * 10) / 10).toString().replace('.', ',');
@@ -250,10 +260,10 @@ function podium(rows, sub) {
 }
 
 function stats() {
-  const me = S.kz.filter(k => k.email === S.me.email), n = s => me.filter(k => k.status === s).length, sc = me.filter(k => k.nilai && k.nilai.length).map(rata);
+  const me = S.kz.filter(isMine), n = s => me.filter(k => k.status === s).length, sc = me.filter(k => k.nilai && k.nilai.length).map(rata);
   $('#stats').innerHTML = S.tab === 'my' ? t('#e0e7ff', me.length, 'Kaizen saya') + t('#fff2c9', n('progress'), 'Sedang berjalan') + t('#d8f5ea', n('done'), 'Selesai') + t('#ffe3ef', fmt(sc.length ? sc.reduce((a, b) => a + b) / sc.length : null), 'Rata-rata skor juri')
-    : S.tab === 'all' ? t('#e0e7ff', S.kz.length, 'Total kaizen') + t('#d8f5ea', S.kz.filter(k => k.status === 'done').length, 'Selesai') + t('#fff2c9', new Set(S.kz.map(k => k.email)).size, 'Kontributor') + t('#ffe3ef', S.kz.filter(scored).length, 'Sudah dinilai')
-    : S.tab === 'sy' ? t('#e0e7ff', S.sy.length, 'Sayembara') + t('#fff2c9', S.sy.filter(s => takers(s).length < 3).length, 'Masih butuh penangan') + t('#d8f5ea', S.sy.filter(s => s.ambilEmail).length, 'Sudah diambil') : '';
+    : S.tab === 'all' ? (() => { const d = S.kz.filter(k => k.status === 'done'); return t('#d8f5ea', d.length, 'Kaizen selesai') + t('#fff2c9', new Set(d.map(k => k.email)).size, 'Kontributor') + t('#ffe3ef', d.filter(scored).length, 'Sudah dinilai'); })()
+    : S.tab === 'ide' ? (() => { const a = S.kz.filter(k => k.status !== 'done'), c = x => a.filter(k => k.status === x).length; return t('#e0e7ff', a.length, 'Total ide') + t('#e0e7ff', c('plan'), 'Rencana') + t('#fff2c9', c('progress'), 'Berjalan') + t('#ffe3ef', c('hold'), 'Tertahan'); })() : S.tab === 'sy' ? t('#e0e7ff', S.sy.length, 'Sayembara') + t('#fff2c9', S.sy.filter(s => takers(s).length < 3).length, 'Masih butuh penangan') + t('#d8f5ea', S.sy.filter(s => s.ambilEmail).length, 'Sudah diambil') : '';
 }
 function board() {
   const m = {};
@@ -278,11 +288,73 @@ const scored = k => !!((k.nilai && k.nilai.length) || k.dinilai);
 const dinilai = k => k.nilai && k.nilai.length ? `<span class="ok">✓ Sudah dinilai · skor ${rata(k)}</span>` : k.dinilai ? `<span class="ok">✓ Sudah dinilai</span>` : '';
 const nilaiBox = k => k.nilai && k.nilai.length ? `<div class="nb"><b>✓ Sudah dinilai · rata-rata ${rata(k)}</b>${k.nilai.map(n => `<p><b>${E(n.juri)}: ${E(n.skor)}</b>${n.komentar ? '<br>' + E(n.komentar) : ''}</p>`).join('')}</div>` : '';
 
+/* ---------- PIC & Eksekutor, catatan juri ---------- */
+const ROLES = { pic: ['pic', 'picStatus', 'picCatatan', 'PIC'], eksekutor: ['eksekutor', 'eksStatus', 'eksCatatan', 'Eksekutor'] };
+const accepted = k => [k.picStatus === 'acc' && k.pic, k.eksStatus === 'acc' && k.eksekutor].filter(Boolean);
+// yang boleh ubah status & foto: pembuat, kecuali PIC/Eksekutor lain sudah acc
+const editors = k => { const a = accepted(k); return a.some(e => e !== k.email) ? a : [k.email]; };
+const roleOf = (k, e = S.me.email) => [k.pic === e && k.picStatus === 'acc' ? 'PIC' : '', k.eksekutor === e && k.eksStatus === 'acc' ? 'Eksekutor' : ''].filter(Boolean).join(' & ');
+const isMine = k => k.email === S.me.email || !!(k.email !== S.me.email && roleOf(k));
+const stT = x => x === 'acc' ? '✓ setuju' : x === 'tolak' ? '✗ menolak' : '⏳ menunggu';
+const roleTag = k => S.tab === 'my' && k.email !== S.me.email ? `<span class="tag">Kamu ${E(roleOf(k))} · dari ${E(U(k.email).nama)}</span>` : '';
+const peran = k => (k.pic || k.eksekutor) ? `<div class="pe">${k.pic ? `<span>PIC: <b>${E(U(k.pic).nama)}</b> ${stT(k.picStatus)}</span>` : ''}${k.eksekutor ? `<span>Eksekutor: <b>${E(U(k.eksekutor).nama)}</b> ${stT(k.eksStatus)}</span>` : ''}</div>` : '';
+const juriNote = k => k.catatanJuri ? `<div class="jn">📝 <b>Catatan juri${k.catatanJuriNama ? ' (' + E(k.catatanJuriNama) + ')' : ''}:</b> ${E(k.catatanJuri)}</div>` : '';
+const juriBox = k => k.catatanJuri ? `<div class="nb"><b>📝 Catatan juri${k.catatanJuriNama ? ' (' + E(k.catatanJuriNama) + ')' : ''}</b><p>${E(k.catatanJuri)}</p></div>` : '';
+const userOpts = v => `<option value="">— Tidak ada —</option>` + S.users.filter(u => u.nama).map(u => `<option value="${E(u.email)}" ${u.email === v ? 'selected' : ''}>${E(u.nama)}${u.email === S.me.email ? ' (aku)' : ''}${u.divisi ? ' · ' + E(u.divisi) : ''}</option>`).join('');
+const roleHint = k => [['PIC', k.pic, k.picStatus, k.picCatatan], ['Eksekutor', k.eksekutor, k.eksStatus, k.eksCatatan]].filter(r => r[1] && r[1] !== S.me.email)
+  .map(r => `${r[0]} ${E(U(r[1]).nama)}: ${r[2] === 'acc' ? 'sudah menyetujui' : r[2] === 'tolak' ? 'menolak' + (r[3] ? ' (' + E(r[3]) + ')' : '') : 'menunggu persetujuan'}.`).join(' ') || 'Kalau memilih orang lain, dia akan diminta menyetujui dulu.';
+const snip = (t, n) => { t = String(t || ''); return t.length > n ? t.slice(0, n) + '…' : t; };
+const kname = k => `<b>${E(k.kategori)}</b>${k.isi ? ' – “' + E(snip(k.isi, 70)) + '”' : ''}`;
+
+// pemberitahuan di My Kaizen: permintaan jadi PIC/Eksekutor, dan penolakan untuk pembuat
+function notif() {
+  const el = $('#nt'), me = S.me.email, req = [], rej = [];
+  S.kz.forEach(k => Object.keys(ROLES).forEach(r => {
+    const R = ROLES[r];
+    if (k[R[0]] === me && k.email !== me && k[R[1]] === 'pending') req.push([k, r]);
+    if (k.email === me && k[R[0]] && k[R[1]] === 'tolak') rej.push([k, r]);
+  }));
+  document.querySelector('[data-t=my]').textContent = 'My Kaizen' + (req.length ? ' 🔔' + req.length : '');
+  if (S.tab !== 'my' || !(req.length + rej.length)) { el.innerHTML = ''; return; }
+  el.innerHTML = req.map(([k, r]) => `<div class="nt"><div>🔔 <b>${E(U(k.email).nama)}</b> meminta kamu menjadi <b>${ROLES[r][3]}</b> untuk kaizen ${kname(k)}</div><div class="ntb"><button class="btn g" data-v="${k.id}">Lihat</button><button class="btn dn" data-no="${k.id}|${r}">Tolak</button><button class="btn" data-ok="${k.id}|${r}">Terima</button></div></div>`).join('')
+    + rej.map(([k, r]) => { const R = ROLES[r]; return `<div class="nt rj"><div>❌ <b>${E(U(k[R[0]]).nama)}</b> menolak menjadi <b>${R[3]}</b> untuk kaizenmu ${kname(k)}${k[R[2]] ? `<br>Catatan: ${E(k[R[2]])}` : ''}</div><div class="ntb"><button class="btn g" data-ack="${k.id}|${r}">Oke, mengerti</button></div></div>`; }).join('');
+  el.onclick = async e => {
+    const b = e.target.closest('button'); if (!b) return; const d = b.dataset;
+    if (d.v) view(d.v);
+    else if (d.ok) respond(...d.ok.split('|'), true);
+    else if (d.no) respond(...d.no.split('|'), false);
+    else if (d.ack) { const a = d.ack.split('|'); apply(await api('ackRole', { id: a[0], role: a[1] }, 'Menutup pemberitahuan')); go('my'); }
+  };
+}
+function respond(id, role, terima) {
+  const k = S.kz.find(x => x.id === id), L = ROLES[role][3];
+  modal(`<h2>${terima ? 'Terima' : 'Tolak'} jadi ${L}?</h2><p>Kaizen ${kname(k)} dari <b>${E(U(k.email).nama)}</b></p><label>Catatan (opsional)</label><textarea id="rc" placeholder="${terima ? 'Mis. siap, aku mulai minggu depan' : 'Alasan menolak, supaya pembuat paham'}"></textarea>
+<div class="act"><button class="btn g" onclick="close_()">Batal</button><button class="btn ${terima ? '' : 'dn'}" id="rs">${terima ? 'Ya, terima' : 'Ya, tolak'}</button></div>`);
+  $('#rs').onclick = async () => { apply(await api('respondRole', { id, role, terima, catatan: $('#rc').value }, 'Mengirim jawaban')); close_(); toast(terima ? 'Kamu sekarang ' + L + ' ✓' : 'Penolakan terkirim'); go('my'); };
+}
+
+/* ---------- form untuk PIC/Eksekutor (hanya status & foto) ---------- */
+function formMgr(k) {
+  const im = { before: k.before || '', after: k.after || '' }; let cur;
+  modal(`<h2>${E(k.kategori)}</h2>${who(k.email)}<p class="tag">Kamu ${E(roleOf(k))} · dari ${E(U(k.email).nama)}</p>
+<label>Detail kaizen</label><p style="white-space:pre-line">${E(k.isi) || '-'}</p>
+<div class="two"><div><label>Due date</label>${fdate(k.due)}</div><div><label>Status</label><select id="m_st">${STAT.map(x => `<option ${k.status === x ? 'selected' : ''}>${x}</option>`).join('')}</select></div></div>${juriBox(k)}${peran(k)}
+<div class="two"><div><label>Foto before</label><div class="ph" id="p_before">Ketuk untuk unggah</div><button type="button" class="mr hide" id="z_before" style="display:block;margin-top:4px">🔍 Perbesar</button></div><div><label>Foto after</label><div class="ph" id="p_after">Ketuk untuk unggah</div><button type="button" class="mr hide" id="z_after" style="display:block;margin-top:4px">🔍 Perbesar</button></div></div>
+<input type="file" id="fi" accept="image/*" class="hide"><div class="act"><button class="btn g" onclick="close_()">Batal</button><button class="btn" id="m_sv">Simpan</button></div>`);
+  const paint = n => { const p = $('#p_' + n); if (im[n]) { p.style.backgroundImage = `url(${im[n]})`; p.textContent = ''; } $('#z_' + n).classList.toggle('hide', !im[n]); };
+  ['before', 'after'].forEach(n => { paint(n); $('#p_' + n).onclick = () => { cur = n; $('#fi').click(); }; $('#z_' + n).onclick = () => zoom(im[n]); });
+  $('#fi').onchange = async e => { if (e.target.files[0]) { im[cur] = await img(e.target.files[0]); paint(cur); e.target.value = ''; } };
+  $('#m_sv').onclick = async () => {
+    const st = $('#m_st').value; apply(await api('saveKaizen', { id: k.id, status: st, before: im.before, after: im.after }, 'Menyimpan status & foto')); close_(); toast('Tersimpan ✓'); go('my'); if (st === 'done') setTimeout(confetti, 350);
+  };
+}
+
 /* ---------- detail (read only) ---------- */
 function view(id) {
-  const k = S.kz.find(x => x.id === id), ph = (s, t) => s ? `<div><label>${t}</label><img src="${E(s)}" style="width:100%;border-radius:14px"></div>` : `<div><label>${t}</label><div class="ph">Belum ada foto</div></div>`;
+  const k = S.kz.find(x => x.id === id), ph = (s, t) => s ? `<div><label>${t}</label><img src="${E(s)}" data-zoom="${E(s)}" title="Klik untuk perbesar" style="width:100%;border-radius:14px;cursor:zoom-in"></div>` : `<div><label>${t}</label><div class="ph">Belum ada foto</div></div>`;
   modal(`<h2>${E(k.kategori)}</h2>${who(k.email)}${k.masalah ? `<label>Sayembara</label><p>${E(k.masalah)}</p>` : ''}
-<label>Detail kaizen</label><p>${E(k.isi) || '-'}</p><div class="two"><div><label>Due date</label>${fdate(k.due)}</div><div><label>Status</label>${k.status}</div></div>
+<label>Detail kaizen</label><p style="white-space:pre-line">${E(k.isi) || '-'}</p><div class="two"><div><label>Due date</label>${fdate(k.due)}</div><div><label>Status</label>${k.status}</div></div>
+${(k.pic || k.eksekutor) ? `<label>PIC &amp; Eksekutor</label>${peran(k)}` : ''}${juriBox(k)}
 <div class="two" style="margin-top:8px">${ph(k.before, 'Before')}${ph(k.after, 'After')}</div><div class="act"><button class="btn g" onclick="close_()">Tutup</button></div>`);
 }
 
@@ -290,24 +362,29 @@ function view(id) {
 const DK = () => 'kz_draft_' + S.me.email;
 function form(id) {
   const k = id ? S.kz.find(x => x.id === id) : null, dr = !id && JSON.parse(localStorage[DK()] || 'null'), v = k || dr || {};
+  if (k && k.email !== S.me.email) return formMgr(k);
+  const lockSF = !!k && editors(k).some(e => e !== S.me.email);
   const sel = String(v.kategori || '').split(', ').filter(Boolean), oth = sel.filter(c => !CATS.includes(c)).join(', '), im = { before: v.before || '', after: v.after || '' };
-  modal(`<h2>${k ? 'Update kaizen' : 'Kaizen baru'}</h2>${k ? nilaiBox(k) : ''}${k && k.masalah ? `<p class="tag">${E(k.masalah)}</p>` : ''}
+  modal(`<h2>${k ? 'Update kaizen' : 'Kaizen baru'}</h2>${k ? nilaiBox(k) + juriBox(k) : ''}${k && k.masalah ? `<p class="tag">${E(k.masalah)}</p>` : ''}
 <label>Kamu dari divisi mana</label>${divPick('fdiv', v.divisi || S.me.divisi)}
 <label>Kaizen untuk apa (boleh pilih lebih dari satu)</label>
 <div class="chk">${CATS.map(c => `<label class="cb"><input type="checkbox" name="cat" value="${c}" ${sel.includes(c) ? 'checked' : ''}><span>${c}</span></label>`).join('')}<label class="cb"><input type="checkbox" id="c_o" ${oth ? 'checked' : ''}><span>Isi sendiri</span></label></div>
 <input id="f_oth" class="${oth ? '' : 'hide'}" placeholder="Tulis kategorimu" value="${E(oth)}" style="margin-top:8px">
 <label>Apa kaizenmu</label><textarea id="f_isi">${E(v.isi)}</textarea>
 <div class="two"><div><label>Rencana selesai tanggal</label><input type="date" id="f_due" value="${v.due || ''}"></div>
-<div><label>Status</label><select id="f_st">${STAT.map(s => `<option ${v.status === s ? 'selected' : ''}>${s}</option>`).join('')}</select></div></div>
-<div class="two"><div><label>Foto before</label><div class="ph" id="p_before">Ketuk untuk unggah</div></div><div><label>Foto after</label><div class="ph" id="p_after">Ketuk untuk unggah</div></div></div>
+<div><label>Status</label><select id="f_st" ${lockSF ? 'disabled' : ''}>${STAT.map(s => `<option ${v.status === s ? 'selected' : ''}>${s}</option>`).join('')}</select></div></div>
+<div class="two"><div><label>PIC (opsional)</label><select id="f_pic">${userOpts(v.pic)}</select></div><div><label>Eksekutor (opsional)</label><select id="f_eks">${userOpts(v.eksekutor)}</select></div></div>
+<div class="dr">${k ? roleHint(k) : 'Kalau memilih orang lain, dia akan diminta menyetujui dulu.'}</div>
+${lockSF ? `<div class="nb">🔒 Status dan foto kaizen ini sekarang dipegang <b>${E(editors(k).map(e => U(e).nama).join(' & '))}</b>. Kamu masih bisa mengubah isi kaizen.</div>` : ''}
+<div class="two"><div><label>Foto before</label><div class="ph" id="p_before">Ketuk untuk unggah</div><button type="button" class="mr hide" id="z_before" style="display:block;margin-top:4px">🔍 Perbesar</button></div><div><label>Foto after</label><div class="ph" id="p_after">Ketuk untuk unggah</div><button type="button" class="mr hide" id="z_after" style="display:block;margin-top:4px">🔍 Perbesar</button></div></div>
 <input type="file" id="fi" accept="image/*" class="hide"><div class="dr" id="dr">${dr ? 'Draft yang belum selesai dikembalikan.' : ''}</div>
 <div class="act">${k ? '<button class="btn dn" id="dl" style="margin-right:auto">Hapus</button>' : ''}<button class="btn g" onclick="close_()">Batal</button><button class="btn" id="sv">Simpan</button></div>`);
   let cur;
-  const paint = n => { const p = $('#p_' + n); if (im[n]) { p.style.backgroundImage = `url(${im[n]})`; p.textContent = ''; } };
-  ['before', 'after'].forEach(n => { paint(n); $('#p_' + n).onclick = () => { cur = n; $('#fi').click(); }; });
+  const paint = n => { const p = $('#p_' + n); if (im[n]) { p.style.backgroundImage = `url(${im[n]})`; p.textContent = ''; } $('#z_' + n).classList.toggle('hide', !im[n]); };
+  ['before', 'after'].forEach(n => { paint(n); $('#p_' + n).onclick = () => { if (lockSF) return toast('Foto dikelola PIC/Eksekutor'); cur = n; $('#fi').click(); }; $('#z_' + n).onclick = () => zoom(im[n]); });
   $('#fi').onchange = async e => { if (e.target.files[0]) { im[cur] = await img(e.target.files[0]); paint(cur); e.target.value = ''; draft(); } };
   $('#c_o').onchange = () => $('#f_oth').classList.toggle('hide', !$('#c_o').checked);
-  const get = () => ({ id: id || '', divisi: divGet('fdiv'), kategori: [...document.querySelectorAll('[name=cat]:checked')].map(x => x.value).concat($('#c_o').checked && $('#f_oth').value.trim() ? [$('#f_oth').value.trim()] : []).join(', '), isi: $('#f_isi').value.trim(), due: $('#f_due').value, status: $('#f_st').value, before: im.before, after: im.after });
+  const get = () => ({ id: id || '', divisi: divGet('fdiv'), kategori: [...document.querySelectorAll('[name=cat]:checked')].map(x => x.value).concat($('#c_o').checked && $('#f_oth').value.trim() ? [$('#f_oth').value.trim()] : []).join(', '), isi: $('#f_isi').value.trim(), due: $('#f_due').value, status: $('#f_st').value, pic: $('#f_pic').value, eksekutor: $('#f_eks').value, before: im.before, after: im.after });
   function draft() { if (id) return; try { localStorage[DK()] = JSON.stringify(get()); $('#dr').textContent = 'Draft tersimpan otomatis ✓'; } catch (e) { } }
   if (k) $('#dl').onclick = async () => { if (!confirm('Hapus kaizen ini? Tindakan ini tidak bisa dibatalkan.')) return; apply(await api('deleteKaizen', { id }, 'Menghapus kaizen')); close_(); toast('Kaizen dihapus'); go('my'); };
   $('#md').oninput = draft;
@@ -316,6 +393,31 @@ function form(id) {
     apply(await api('saveKaizen', d, 'Menyimpan kaizen & mengunggah foto')); localStorage.removeItem(DK()); close_(); toast('Kaizen tersimpan ✓'); go('my'); if (d.status === 'done') setTimeout(confetti, 350);
   };
 }
+
+/* ---------- zoom foto (klik gambar: perbesar, geser, cubit/scroll) ---------- */
+const Z = { s: 1, x: 0, y: 0, p: new Map(), d0: 1, s0: 1 };
+const zApply = () => { $('#zi').style.transform = `translate(${Z.x}px,${Z.y}px) scale(${Z.s})`; };
+const zd = () => { const a = [...Z.p.values()]; return Math.hypot(a[0][0] - a[1][0], a[0][1] - a[1][1]) || 1; };
+function zoom(src) { if (!src) return; $('#zi').src = src; Z.s = 1; Z.x = Z.y = 0; zApply(); $('#zm').classList.add('on'); }
+function zoomClose() { $('#zm').classList.remove('on'); $('#zi').removeAttribute('src'); }
+function zoomBy(f) { Z.s = Math.min(6, Math.max(1, Z.s * f)); if (Z.s === 1) Z.x = Z.y = 0; zApply(); }
+function zoomReset() { Z.s = 1; Z.x = Z.y = 0; zApply(); }
+(() => {
+  const z = $('#zs');
+  z.addEventListener('wheel', e => { e.preventDefault(); zoomBy(e.deltaY < 0 ? 1.15 : 1 / 1.15); }, { passive: false });
+  z.addEventListener('dblclick', () => { Z.s > 1 ? zoomReset() : zoomBy(2.5); });
+  z.addEventListener('pointerdown', e => { z.setPointerCapture(e.pointerId); Z.p.set(e.pointerId, [e.clientX, e.clientY]); if (Z.p.size === 2) { Z.d0 = zd(); Z.s0 = Z.s; } });
+  z.addEventListener('pointermove', e => {
+    const o = Z.p.get(e.pointerId); if (!o) return; const n = [e.clientX, e.clientY];
+    if (Z.p.size === 2) { Z.p.set(e.pointerId, n); Z.s = Math.min(6, Math.max(1, Z.s0 * zd() / Z.d0)); }
+    else if (Z.s > 1) { Z.x += n[0] - o[0]; Z.y += n[1] - o[1]; Z.p.set(e.pointerId, n); }
+    zApply();
+  });
+  const end = e => { Z.p.delete(e.pointerId); if (Z.s === 1) { Z.x = Z.y = 0; zApply(); } };
+  z.addEventListener('pointerup', end); z.addEventListener('pointercancel', end);
+  document.addEventListener('click', e => { const t = e.target.closest('[data-zoom]'); if (t) { e.stopPropagation(); zoom(t.dataset.zoom); } }, true);
+  document.addEventListener('keydown', e => { if (e.key === 'Escape') zoomClose(); });
+})();
 
 /* ---------- sayembara baru ---------- */
 function newSy() {
