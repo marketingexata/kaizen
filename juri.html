@@ -44,6 +44,12 @@ tr.sub td{background:var(--pkl);font-weight:700}tr.dv td{background:var(--ink);c
 @media(max-width:640px){.tabs{order:3;width:100%;overflow:auto}header{padding:10px 14px}}
 @media(prefers-reduced-motion:reduce){*{transition:none!important}}
 .modal h2{padding-right:44px}.x{position:sticky;top:0;z-index:3;display:grid;place-items:center;width:34px;height:34px;margin:0 0 -34px auto;border:0;border-radius:50%;background:var(--pkl);color:var(--ink);font-size:15px;cursor:pointer;transition:.2s}.x:hover{transform:rotate(90deg)}
+.zm{position:fixed;inset:0;background:#0b0f1ef2;z-index:80;display:none;touch-action:none}.zm.on{display:block}
+#zs{position:absolute;inset:0;overflow:hidden;display:grid;place-items:center;touch-action:none;cursor:grab}
+#zi{max-width:94vw;max-height:84vh;user-select:none;-webkit-user-drag:none;will-change:transform}
+.zc{position:absolute;left:50%;bottom:calc(env(safe-area-inset-bottom,0px) + 18px);transform:translateX(-50%);display:flex;gap:8px;z-index:2}
+.zc button{border:0;border-radius:99px;background:#fffffff2;padding:10px 18px;font-weight:700;cursor:pointer;color:#222}
+.zx{position:absolute;top:calc(env(safe-area-inset-top,0px) + 14px);right:14px;margin:0;z-index:3;background:#fffffff2}
 </style></head><body>
 
 <section id="login"><div style="width:min(380px,100%)"><h1>Juri.<br>Nilai dengan<br>adil.</h1>
@@ -51,12 +57,13 @@ tr.sub td{background:var(--pkl);font-weight:700}tr.dv td{background:var(--ink);c
 <button class="btn" id="l_go">Masuk</button><a href="#" id="l_fp" style="color:var(--pk);font-weight:700;text-align:center;font-size:14px">Lupa password?</a><small style="color:var(--mut)">Email harus sudah didaftarkan admin di sheet "Juri". Password awal 12345.</small></div></div></section>
 
 <div id="app" class="hide">
-<header><h1>Juri</h1><nav class="tabs"><button class="tab" data-t="all">All Kaizen</button><button class="tab" data-t="sy">Sayembara</button><button class="tab" data-t="tp">Skoring Template</button></nav>
+<header><h1>Juri</h1><nav class="tabs"><button class="tab" data-t="all">All Kaizen</button><button class="tab" data-t="ide">Ide Kaizen</button><button class="tab" data-t="sy">Sayembara</button><button class="tab" data-t="tp">Skoring Template</button></nav>
 <span class="sp"></span><div class="av" id="me" title="My profile"></div></header>
 <main><div class="bar" id="bar"></div><div class="grid" id="grid"></div></main></div>
 
 <div class="ov" id="ov"><div class="modal" id="md"></div></div>
 <div id="ld"><div class="lb"><div id="lp">0%</div><div class="trk"><div id="lf"></div></div><b>Tunggu ya…</b><div id="lm" style="color:var(--mut);font-size:13px"></div></div></div>
+<div class="zm" id="zm"><div id="zs"><img id="zi" alt="Foto"></div><button class="x zx" onclick="zoomClose()" aria-label="Tutup">✕</button><div class="zc"><button onclick="zoomBy(1/1.4)">−</button><button onclick="zoomReset()">Reset</button><button onclick="zoomBy(1.4)">+</button></div></div>
 <div id="toast"></div>
 
 <script>
@@ -128,7 +135,7 @@ function go(t) {
   if (S.tab === 'tp') { $('#bar').innerHTML = `<button class="btn" id="dpng">Unduh PNG 300ppi</button><button class="btn g" id="djpg">Unduh JPG 300ppi</button>`; $('#dpng').onclick = () => dl('png'); $('#djpg').onclick = () => dl('jpg'); return table(); }
   const f = S.f[S.tab] = S.f[S.tab] || {}, divs = [...new Set(S.users.map(u => u.divisi).filter(Boolean))];
   $('#bar').innerHTML = `<select data-k="divisi"><option value="">Semua divisi</option>${divs.map(d => `<option ${f.divisi === d ? 'selected' : ''}>${E(d)}</option>`).join('')}</select>
-<select data-k="skor"><option value="">Semua (sudah/belum dinilai)</option><option value="y" ${f.skor === 'y' ? 'selected' : ''}>Sudah kuberi skor</option><option value="n" ${f.skor === 'n' ? 'selected' : ''}>Belum kuberi skor</option></select>
+${S.tab === 'ide' ? `<select data-k="status"><option value="">Semua status</option>${['plan', 'progress', 'hold'].map(x => `<option ${f.status === x ? 'selected' : ''}>${x}</option>`).join('')}</select>` : `<select data-k="skor"><option value="">Semua (sudah/belum dinilai)</option><option value="y" ${f.skor === 'y' ? 'selected' : ''}>Sudah kuberi skor</option><option value="n" ${f.skor === 'n' ? 'selected' : ''}>Belum kuberi skor</option></select>`}
 <input type="date" data-k="due" value="${f.due || ''}" title="Due date maksimal"><select data-k="sort"><option value="new">Terbaru dulu</option><option value="old" ${f.sort === 'old' ? 'selected' : ''}>Terlama dulu</option></select>
 <input type="search" data-k="q" placeholder="Cari kata apa saja…" value="${E(f.q || '')}">`;
   $('#bar').oninput = e => { f[e.target.dataset.k] = e.target.value; draw(); };
@@ -138,22 +145,62 @@ document.querySelectorAll('.tab').forEach(b => b.onclick = () => go(b.dataset.t)
 
 function draw() {
   const f = S.f[S.tab], q = (f.q || '').toLowerCase();
-  let a = S.tab === 'all' ? S.kz.filter(k => k.jenis !== 'sayembara').map(k => ({ ...k, kid: k.id })) : S.sy.flatMap(s => { const ks = String(s.kaizenId || '').split(',').filter(Boolean); if (!ks.length) return [{ ...s, kid: '', status: '', isi: '', penangan: '' }]; return ks.map(kid => { const k = S.kz.find(x => x.id === kid); return { ...s, cid: s.id + '|' + kid, kid, status: k ? k.status : '', isi: k ? k.isi : '', penangan: k ? k.nama : '' }; }); });
-  a = a.filter(x => (!f.divisi || x.divisi === f.divisi) && (!f.due || (x.due && x.due <= f.due)) && (!f.skor || (f.skor === 'y') === !!(x.kid && mine(x.kid))) && (!q || JSON.stringify(x).toLowerCase().includes(q)));
+  let a = S.tab === 'ide' ? S.kz.filter(k => k.status !== 'done').map(k => ({ ...k, kid: k.id })) : S.tab === 'all' ? S.kz.filter(k => k.jenis !== 'sayembara').map(k => ({ ...k, kid: k.id })) : S.sy.flatMap(s => { const ks = String(s.kaizenId || '').split(',').filter(Boolean); if (!ks.length) return [{ ...s, kid: '', status: '', isi: '', penangan: '' }]; return ks.map(kid => { const k = S.kz.find(x => x.id === kid); return { ...s, cid: s.id + '|' + kid, kid, status: k ? k.status : '', isi: k ? k.isi : '', penangan: k ? k.nama : '' }; }); });
+  a = a.filter(x => (!f.status || x.status === f.status) && (!f.divisi || x.divisi === f.divisi) && (!f.due || (x.due && x.due <= f.due)) && (!f.skor || (f.skor === 'y') === !!(x.kid && mine(x.kid))) && (!q || JSON.stringify(x).toLowerCase().includes(q)));
   a.sort((x, y) => f.sort === 'old' ? x.dibuat - y.dibuat : y.dibuat - x.dibuat);
   $('#grid').innerHTML = a.length ? a.map(x => {
     const m = x.kid && mine(x.kid), st = x.status || 'belum diambil', badge = m ? `<span class="sc" title="Skor kamu">${m.skor}</span>` : `<span class="sc no">belum dinilai</span>`;
-    return `<div class="card" data-id="${x.cid || x.id}">${who(x.email)}<h3>${S.tab === 'all' ? E(x.kategori) : 'Sayembara'}</h3>
-<p>${E(S.tab === 'all' ? x.isi : x.problem) || '<i>Belum diisi</i>'}</p>${S.tab === 'sy' ? `<div class="who">Ditangani: <b>${x.penangan ? E(x.penangan) : 'belum ada'}</b></div>` : ''}
+    return `<div class="card" data-id="${x.cid || x.id}">${who(x.email)}<h3>${S.tab === 'sy' ? 'Sayembara' : E(x.kategori)}</h3>
+<p>${E(S.tab === 'sy' ? x.problem : x.isi) || '<i>Belum diisi</i>'}</p>${S.tab === 'ide' ? ideInfo(x) : ''}${S.tab === 'sy' ? `<div class="who">Ditangani: <b>${x.penangan ? E(x.penangan) : 'belum ada'}</b></div>` : ''}
 <div class="meta"><span>Due ${fdate(x.due)}</span><span class="pill ${st}">${st}</span>${badge}</div></div>`;
   }).join('') : `<div class="empty" style="grid-column:1/-1">Tidak ada data yang cocok dengan filter.</div>`;
   document.querySelectorAll('[data-id]').forEach(c => c.onclick = () => detail(c.dataset.id));
 }
 
+/* ---------- Ide Kaizen: juri ubah status + beri catatan ---------- */
+const stT = x => x === 'acc' ? '✓ setuju' : x === 'tolak' ? '✗ menolak' : '⏳ menunggu';
+const ideInfo = k => ((k.pic || k.eksekutor) ? `<div class="dr">${k.pic ? 'PIC: <b>' + E(U(k.pic).nama) + '</b> ' + stT(k.picStatus) : ''}${k.pic && k.eksekutor ? ' · ' : ''}${k.eksekutor ? 'Eksekutor: <b>' + E(U(k.eksekutor).nama) + '</b> ' + stT(k.eksStatus) : ''}</div>` : '') + (k.catatanJuri ? `<div class="dr">📝 Catatan juri: ${E(k.catatanJuri)}</div>` : '');
+function ideDetail(id) {
+  const k = S.kz.find(x => x.id === id); if (!k) return;
+  const ph = (s, t) => `<div><label>${t}</label>${s ? `<img src="${E(s)}" data-zoom="${E(s)}" title="Klik untuk perbesar" style="width:100%;border-radius:14px;cursor:zoom-in">` : '<div class="ph">Belum ada foto</div>'}</div>`;
+  modal(`<h2>${E(k.kategori)}</h2>${who(k.email)}${k.masalah ? `<label>Sayembara</label><p>${E(k.masalah)}</p>` : ''}<label>Detail kaizen</label><p style="white-space:pre-line">${E(k.isi) || '-'}</p>
+<div class="two"><div><label>Due date</label>${fdate(k.due)}</div><div><label>Status saat ini</label>${E(k.status)}</div></div>${ideInfo(k)}<div class="two">${ph(k.before, 'Before')}${ph(k.after, 'After')}</div>
+<div class="box"><b>Tinjauan juri</b><label>Ubah status</label><select id="is" style="width:100%;padding:10px 12px;border:1px solid var(--line);border-radius:12px">${['plan', 'progress', 'hold'].map(x => `<option ${k.status === x ? 'selected' : ''}>${x}</option>`).join('')}</select>
+<label>Catatan untuk pembuat (misal: tidak layak / tidak memungkinkan, beserta alasannya)</label><textarea id="ic">${E(k.catatanJuri)}</textarea><div class="dr">Catatan hanya terlihat oleh pembuat, PIC, dan eksekutor kaizen ini. Kosongkan untuk menghapus catatan.</div></div>
+<div class="act"><button class="btn g" onclick="close_()">Tutup</button><button class="btn" id="isv">Simpan</button></div>`);
+  $('#isv').onclick = async () => { apply(await api('saveIde', { kaizenId: k.id, status: $('#is').value, catatan: $('#ic').value }, 'Menyimpan tinjauan')); close_(); toast('Tinjauan tersimpan ✓'); go(); };
+}
+
+/* ---------- zoom foto (klik gambar: perbesar, geser, cubit/scroll) ---------- */
+const Z = { s: 1, x: 0, y: 0, p: new Map(), d0: 1, s0: 1 };
+const zApply = () => { $('#zi').style.transform = `translate(${Z.x}px,${Z.y}px) scale(${Z.s})`; };
+const zd = () => { const a = [...Z.p.values()]; return Math.hypot(a[0][0] - a[1][0], a[0][1] - a[1][1]) || 1; };
+function zoom(src) { if (!src) return; $('#zi').src = src; Z.s = 1; Z.x = Z.y = 0; zApply(); $('#zm').classList.add('on'); }
+function zoomClose() { $('#zm').classList.remove('on'); $('#zi').removeAttribute('src'); }
+function zoomBy(f) { Z.s = Math.min(6, Math.max(1, Z.s * f)); if (Z.s === 1) Z.x = Z.y = 0; zApply(); }
+function zoomReset() { Z.s = 1; Z.x = Z.y = 0; zApply(); }
+(() => {
+  const z = $('#zs');
+  z.addEventListener('wheel', e => { e.preventDefault(); zoomBy(e.deltaY < 0 ? 1.15 : 1 / 1.15); }, { passive: false });
+  z.addEventListener('dblclick', () => { Z.s > 1 ? zoomReset() : zoomBy(2.5); });
+  z.addEventListener('pointerdown', e => { z.setPointerCapture(e.pointerId); Z.p.set(e.pointerId, [e.clientX, e.clientY]); if (Z.p.size === 2) { Z.d0 = zd(); Z.s0 = Z.s; } });
+  z.addEventListener('pointermove', e => {
+    const o = Z.p.get(e.pointerId); if (!o) return; const n = [e.clientX, e.clientY];
+    if (Z.p.size === 2) { Z.p.set(e.pointerId, n); Z.s = Math.min(6, Math.max(1, Z.s0 * zd() / Z.d0)); }
+    else if (Z.s > 1) { Z.x += n[0] - o[0]; Z.y += n[1] - o[1]; Z.p.set(e.pointerId, n); }
+    zApply();
+  });
+  const end = e => { Z.p.delete(e.pointerId); if (Z.s === 1) { Z.x = Z.y = 0; zApply(); } };
+  z.addEventListener('pointerup', end); z.addEventListener('pointercancel', end);
+  document.addEventListener('click', e => { const t = e.target.closest('[data-zoom]'); if (t) { e.stopPropagation(); zoom(t.dataset.zoom); } }, true);
+  document.addEventListener('keydown', e => { if (e.key === 'Escape') zoomClose(); });
+})();
+
 /* ---------- detail + form skor (draft otomatis) ---------- */
 function detail(id) {
+  if (S.tab === 'ide') return ideDetail(id);
   const [sid, skid] = String(id).split('|'), sy = S.tab === 'sy' ? S.sy.find(x => x.id === sid) : null, kid = sy ? skid : id, k = S.kz.find(x => x.id === kid);
-  const ph = (s, t) => `<div><label>${t}</label>${s ? `<img src="${E(s)}" style="width:100%;border-radius:14px">` : '<div class="ph">Belum ada foto</div>'}</div>`;
+  const ph = (s, t) => `<div><label>${t}</label>${s ? `<img src="${E(s)}" data-zoom="${E(s)}" title="Klik untuk perbesar" style="width:100%;border-radius:14px;cursor:zoom-in">` : '<div class="ph">Belum ada foto</div>'}</div>`;
   let body = `<h2>${sy ? 'Sayembara' : E(k.kategori)}</h2>${who((sy || k).email)}`;
   if (sy) body += `<label>Problem</label><p>${E(sy.problem)}</p><div class="two"><div><label>Due date</label>${fdate(sy.due)}</div><div><label>Ditangani oleh</label>${k ? E(k.nama) : 'Belum ada'}</div></div>`;
   if (k) body += `<label>Detail kaizen${sy ? ' (solusi)' : ''}</label><p>${E(k.isi) || '-'}</p><div class="two"><div><label>Due date</label>${fdate(k.due)}</div><div><label>Status</label>${k.status}</div></div><div class="two">${ph(k.before, 'Before')}${ph(k.after, 'After')}</div>`;
