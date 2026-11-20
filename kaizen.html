@@ -119,7 +119,7 @@ main{padding:20px calc(env(safe-area-inset-right,0px) + 18px) calc(env(safe-area
 .sx{align-self:flex-start;border:1px solid var(--line);background:#fff;border-radius:99px;padding:5px 13px;font-weight:700;font-size:13px;cursor:pointer;color:var(--mut);transition:.2s}.sx:hover{border-color:var(--acc);color:var(--acc)}.sx.on{background:var(--t1);color:var(--acc);border-color:var(--acc)}
 .cml{display:grid;gap:8px;max-height:300px;overflow:auto;margin:8px 0}.cm{background:var(--t0);border-radius:14px;padding:10px 12px}.cm.me{background:var(--t2)}.cm small{color:var(--mut);margin-left:6px}.cm p{white-space:pre-line}.dsc{color:#47506b;margin:6px 0 12px;white-space:pre-line}
 @media(prefers-reduced-motion:reduce){.wl-e,.hrt{animation:none!important}}
-.kon{margin-top:22px}
+.tab#konNav{--d:#14b8a6}
 .modal.emb{display:flex;flex-direction:column;gap:10px;width:min(900px,100%);height:82vh;max-height:96vh;transition:.3s}.modal.emb.wide{width:min(1320px,100%);height:95vh}
 .emb-h{display:flex;gap:10px;align-items:center;justify-content:space-between;flex-wrap:wrap}.emb-h h2{margin:0}.emb-b{display:flex;gap:8px;flex-wrap:wrap}
 .emb-f{flex:1;width:100%;min-height:300px;border:1px solid var(--line);border-radius:16px;background:#fff}
@@ -166,7 +166,7 @@ body.nav-open{overflow:hidden}
 <div id="app" class="hide">
 <header><h1>Kaizen</h1><button class="hb" id="hb" type="button" aria-label="Buka menu" aria-expanded="false" aria-controls="nav"><svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path class="hb-o" d="M4 7h16M4 12h16M4 17h16"/><path class="hb-c" d="M6 6l12 12M18 6L6 18"/></svg></button>
 <span class="sp"></span><div class="av" id="me" title="My profile"></div></header>
-<nav class="tabs" id="nav" aria-label="Menu utama"><div class="brand"><img src="https://marketingexata.github.io/kontenmarketing/EXATAGROUP.png" alt="Exata Group"></div><button class="tab" data-t="my">My Kaizen</button><button class="tab" data-t="all">All Kaizen</button><button class="tab" data-t="ide">Ide Kaizen</button><button class="tab" data-t="sy">Sayembara</button><button class="tab" data-t="lb">Peringkat</button><button class="tab" data-t="sp">Sharing Personal</button></nav>
+<nav class="tabs" id="nav" aria-label="Menu utama"><div class="brand"><img src="https://marketingexata.github.io/kontenmarketing/EXATAGROUP.png" alt="Exata Group"></div><button class="tab" data-t="my">My Kaizen</button><button class="tab" data-t="all">All Kaizen</button><button class="tab" data-t="ide">Ide Kaizen</button><button class="tab" data-t="sy">Sayembara</button><button class="tab" data-t="lb">Peringkat</button><button class="tab" data-t="sp">Sharing Personal</button><button class="tab" id="konNav" type="button">Konten Marketing</button></nav>
 <div class="scrim" id="scrim"></div>
 <main><div id="hd"></div><div id="nt"></div><div id="stats"></div><div class="bar" id="bar"></div><div class="grid" id="grid"></div></main>
 <button class="btn fab" id="fab"></button>
@@ -276,6 +276,7 @@ function img(file, max = 1280) {
 function modal(h, lock) { $('#md').classList.remove('emb', 'wide'); $('#md').innerHTML = (lock ? '' : '<button class="x" onclick="close_()" aria-label="Tutup">✕</button>') + h; $('#md').scrollTop = 0; $('#ov').classList.add('on'); }
 function close_() { $('#ov').classList.remove('on'); $('#md').classList.remove('emb', 'wide'); }
 const KONTEN_URL = 'https://marketingexata.github.io/konten/';
+$('#konNav').onclick = () => openKonten();
 function openKonten() {
   modal(`<div class="emb-h"><h2>🎬 Konten Marketing Exata</h2><div class="emb-b"><button type="button" class="btn g" id="ew">⤢ Perlebar</button><button type="button" class="btn g" id="et">↗ Buka di tab baru</button></div></div>
 <iframe class="emb-f" src="${KONTEN_URL}" title="Konten Marketing Exata" referrerpolicy="no-referrer"></iframe><div class="dr">Kalau halaman tidak tampil di sini, pakai "Buka di tab baru".</div>`);
@@ -311,7 +312,7 @@ function go(t) {
   draw();
   if (S.tab === 'sp' && (t ? prev !== 'sp' : !sessionStorage.kz_sp)) welcome();
 }
-document.querySelectorAll('.tab').forEach(b => b.onclick = () => go(b.dataset.t));
+document.querySelectorAll('.tab[data-t]').forEach(b => b.onclick = () => go(b.dataset.t));
 
 function draw() {
   stats(); notif(); if (S.tab === 'lb') return board(); if (S.tab === 'sp') return spView();
@@ -558,9 +559,8 @@ ${c.jawaban ? `<div class="ans"><b>💬 Jawaban manajemen${c.jawabanNama ? ' · 
 const spR = () => { if (S.tab === 'sp') spView(); };
 function spView() {
   const my = S.sub === 'my', n = spNew(), seen = +(localStorage[spKey()] || 0);
-  $('#grid').innerHTML = `<div style="grid-column:1/-1"><div class="spt"><button data-sub="new" class="${my ? '' : 'on'}">✍️ Curhat baru</button><button data-sub="my" class="${my ? 'on' : ''}">💬 Curhatanku (${S.cu.length})${!my && n ? ' 🔔' + n : ''}</button></div>${my ? spList(seen) : spForm()}<div class="kon"><button type="button" class="btn g" id="konBtn">🎬 Buka Konten Marketing Exata</button></div></div>`;
+  $('#grid').innerHTML = `<div style="grid-column:1/-1"><div class="spt"><button data-sub="new" class="${my ? '' : 'on'}">✍️ Curhat baru</button><button data-sub="my" class="${my ? 'on' : ''}">💬 Curhatanku (${S.cu.length})${!my && n ? ' 🔔' + n : ''}</button></div>${my ? spList(seen) : spForm()}</div>`;
   document.querySelectorAll('[data-sub]').forEach(b => b.onclick = () => { S.sub = b.dataset.sub; spView(); });
-  $('#konBtn').onclick = openKonten;
   document.querySelectorAll('[data-delcu]').forEach(b => b.onclick = async () => { if (!confirm('Hapus curhat ini? Juri juga tidak akan bisa melihatnya lagi, dan tindakan ini tidak bisa dibatalkan.')) return; const id = b.dataset.delcu; opt(() => { S.cu = S.cu.filter(c => c.id !== id); }, spR, 'deleteCurhat', { id }).then(() => toast('Curhat dihapus')).catch(() => { }); });
   if (my) { if (S.cu.length) localStorage[spKey()] = Math.max(0, ...S.cu.map(c => +c.diubah || 0)); document.querySelector('[data-t=sp]').textContent = 'Sharing Personal'; return; }
   const get = () => ({ problem: $('#sp_p').value.trim(), keterangan: $('#sp_k').value.trim() });
