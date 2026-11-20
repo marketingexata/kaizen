@@ -1,5 +1,6 @@
 <!DOCTYPE html>
-<html lang="id"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<html lang="id"><head>
+<link rel="preconnect" href="https://script.google.com"><link rel="preconnect" href="https://script.googleusercontent.com" crossorigin><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <title>Kaizen</title>
 <link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,600;12..96,700&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
 <style>
@@ -10,6 +11,7 @@ h1,h2,h3{font-family:var(--fd);font-weight:var(--fw)}button,input,select,textare
 .hide{display:none!important}:focus-visible{outline:3px solid var(--ring);outline-offset:2px}
 header{position:sticky;top:0;z-index:5;background:#fffffff0;backdrop-filter:blur(10px);border-bottom:1px solid var(--line);display:flex;align-items:center;gap:16px;padding:10px 20px;flex-wrap:wrap}
 header h1{font-size:24px;display:flex;align-items:center;gap:10px}.sp{flex:1}
+.lg{width:34px;height:34px;border-radius:11px;background:linear-gradient(135deg,var(--acc),var(--acc2));color:#fff;display:grid;place-items:center;font-size:18px}
 .tabs{display:flex;gap:2px;background:var(--t0);padding:4px;border-radius:99px}
 .tab{border:0;background:none;padding:8px 16px;border-radius:99px;cursor:pointer;font-weight:600;color:var(--mut);transition:.2s;white-space:nowrap}
 .tab:hover{color:var(--ink)}.tab.on{background:#fff;color:var(--acc);box-shadow:0 2px 8px var(--sh)}
@@ -66,7 +68,7 @@ tr.sub td{background:var(--t0);font-weight:700}tr.dv td{background:var(--ink);co
 .lb{width:min(300px,80vw);text-align:center}.trk{height:10px;background:var(--t0);border-radius:9px;overflow:hidden;margin:14px 0 8px}
 #lf{height:100%;width:0;background:linear-gradient(90deg,var(--acc),var(--acc2));border-radius:9px;transition:width .2s}#lp{font:var(--fw) 42px var(--fd)}
 #toast{position:fixed;left:50%;bottom:28px;transform:translate(-50%,80px);background:var(--ink);color:#fff;padding:12px 22px;border-radius:99px;z-index:60;transition:.35s}#toast.on{transform:translate(-50%,0)}
-@media(max-width:640px){header{padding:10px 14px}.pod{gap:6px}.pd{padding:12px 4px}.pd.r1{padding-top:20px}.pd b{font-size:13px}.pd .sv{font-size:22px}}
+@media(max-width:640px){.tabs{order:3;width:100%;overflow:auto}header{padding:10px 14px}.pod{gap:6px}.pd{padding:12px 4px}.pd.r1{padding-top:20px}.pd b{font-size:13px}.pd .sv{font-size:22px}}
 @media(prefers-reduced-motion:reduce){*{transition:none!important}}
 /* ---- tambahan: kategori, thumbnail, penangan, animasi, mobile ---- */
 #hd h2{font-size:clamp(34px,6vw,56px);line-height:1.04;letter-spacing:-1px}#hd p{color:var(--mut);margin:6px 0 22px}
@@ -78,12 +80,15 @@ tr.sub td{background:var(--t0);font-weight:700}tr.dv td{background:var(--ink);co
 .card{animation:up .45s both;animation-delay:calc(var(--i,0)*45ms)}@keyframes up{from{opacity:0;transform:translateY(14px)}}
 .cf{position:fixed;top:55%;width:9px;height:14px;border-radius:2px;z-index:70;pointer-events:none;animation:cf 1.4s cubic-bezier(.2,.8,.3,1) forwards}@keyframes cf{to{transform:translate(var(--x),380px) rotate(var(--r));opacity:0}}
 @media(max-width:640px){header{backdrop-filter:none;background:#fff}main{padding-bottom:150px}
-.fab{bottom:84px;right:14px}#toast{bottom:96px}
+.tabs{position:fixed;left:12px;right:12px;bottom:12px;width:auto;order:0;justify-content:space-around;background:#fffffff2;backdrop-filter:blur(12px);border:1px solid var(--line);box-shadow:0 10px 30px #1e274728;z-index:8;overflow:visible}
+.tab{flex:1;padding:10px 2px;font-size:12px;text-align:center}.fab{bottom:84px;right:14px}#toast{bottom:96px}
 .ov{align-items:end;padding:0}.modal{width:100%;border-radius:28px 28px 0 0;max-height:90vh;transform:translateY(100%)}.ov.on .modal{transform:none}}
 .modal h2{padding-right:44px}.x{position:sticky;top:0;z-index:3;display:grid;place-items:center;width:34px;height:34px;margin:0 0 -34px auto;border:0;border-radius:50%;background:var(--t1);color:var(--ink);font-size:15px;cursor:pointer;transition:.2s}.x:hover{transform:rotate(90deg)}
 /* ---- HP: tab membeku di bawah header, tepi layar lebih lega (aman untuk notch iPhone) ---- */
 @media(max-width:640px){
 header{padding:calc(env(safe-area-inset-top,0px) + 10px) calc(env(safe-area-inset-right,0px) + 16px) 10px calc(env(safe-area-inset-left,0px) + 16px);gap:10px 12px;backdrop-filter:none;background:#fff}
+.tabs{position:static;order:3;width:100%;overflow-x:auto;justify-content:flex-start;background:var(--t0);backdrop-filter:none;border:0;box-shadow:none;z-index:auto}
+.tab{flex:1;padding:9px 12px;font-size:13px;white-space:nowrap;text-align:center}
 main{padding:20px calc(env(safe-area-inset-right,0px) + 18px) calc(env(safe-area-inset-bottom,0px) + 100px) calc(env(safe-area-inset-left,0px) + 18px)}
 .fab{right:calc(env(safe-area-inset-right,0px) + 18px);bottom:calc(env(safe-area-inset-bottom,0px) + 20px)}
 #toast{bottom:calc(env(safe-area-inset-bottom,0px) + 24px);max-width:calc(100vw - 36px);text-align:center}
@@ -118,39 +123,11 @@ main{padding:20px calc(env(safe-area-inset-right,0px) + 18px) calc(env(safe-area
 .sx{align-self:flex-start;border:1px solid var(--line);background:#fff;border-radius:99px;padding:5px 13px;font-weight:700;font-size:13px;cursor:pointer;color:var(--mut);transition:.2s}.sx:hover{border-color:var(--acc);color:var(--acc)}.sx.on{background:var(--t1);color:var(--acc);border-color:var(--acc)}
 .cml{display:grid;gap:8px;max-height:300px;overflow:auto;margin:8px 0}.cm{background:var(--t0);border-radius:14px;padding:10px 12px}.cm.me{background:var(--t2)}.cm small{color:var(--mut);margin-left:6px}.cm p{white-space:pre-line}.dsc{color:#47506b;margin:6px 0 12px;white-space:pre-line}
 @media(prefers-reduced-motion:reduce){.wl-e,.hrt{animation:none!important}}
-/* ---- layout: sidebar kiri (desktop) / drawer hamburger (HP) ---- */
-:root{--hh:60px;--sw:248px}
-body{padding-top:var(--hh)}
-header{position:fixed;top:0;left:0;right:0;z-index:15;height:var(--hh);flex-wrap:nowrap;padding:0 20px}
-header h1{gap:0;white-space:nowrap}
-.hb{display:none;width:40px;height:40px;margin-left:6px;border:1px solid var(--line);border-radius:12px;background:#fff;color:var(--ink);cursor:pointer;place-items:center;flex:none;transition:.2s}
-.hb:hover{border-color:var(--acc);color:var(--acc)}
-.hb .hb-c{display:none}.hb[aria-expanded=true] .hb-o{display:none}.hb[aria-expanded=true] .hb-c{display:block}
-.tabs{position:fixed;top:var(--hh);left:0;bottom:0;width:var(--sw);z-index:12;display:flex;flex-direction:column;gap:4px;padding:16px 12px calc(env(safe-area-inset-bottom,0px) + 16px);background:#fffffff2;backdrop-filter:blur(10px);border-right:1px solid var(--line);border-radius:0;overflow-y:auto}
-.tab{width:100%;text-align:left;padding:12px 16px;border-radius:14px;font-size:15px}
-.tab.on{background:var(--t0);color:var(--acc);box-shadow:none}
-.scrim{display:none}
-@media(min-width:768px){body:has(#app:not(.hide)){padding-left:var(--sw)}}
-@media(max-width:767px){
-:root{--hh:calc(60px + env(safe-area-inset-top,0px));--sw:min(280px,82vw)}
-header{padding:env(safe-area-inset-top,0px) calc(env(safe-area-inset-right,0px) + 16px) 0 calc(env(safe-area-inset-left,0px) + 16px);gap:0}
-.hb{display:grid}
-.tabs{transform:translateX(-100%);transition:transform .28s ease;box-shadow:none;visibility:hidden}
-body.nav-open .tabs{transform:none;visibility:visible;box-shadow:10px 0 30px #1e274730}
-.scrim{display:block;position:fixed;inset:var(--hh) 0 0 0;background:#1e274766;z-index:11;opacity:0;pointer-events:none;transition:opacity .25s}
-body.nav-open .scrim{opacity:1;pointer-events:auto}
-body.nav-open{overflow:hidden}
-}
-@media(prefers-reduced-motion:reduce){.tabs,.scrim{transition:none}}
-/* ---- logo sidebar + titik warna menu ---- */
-.brand{padding:4px 8px 18px;margin-bottom:14px;position:relative;display:flex;align-items:center;justify-content:center}
-.brand img{display:block;max-width:100%;max-height:52px;width:auto;height:auto;object-fit:contain}
-.brand::after{content:"";position:absolute;left:8px;right:8px;bottom:0;height:1px;background:linear-gradient(90deg,transparent,var(--line) 18%,#c9d2f2 50%,var(--line) 82%,transparent)}
-.tab{display:flex;align-items:center;gap:12px;--d:var(--acc)}
-.tab::before{content:"";flex:none;width:8px;height:8px;border-radius:50%;background:var(--d);box-shadow:0 0 0 3px color-mix(in srgb,var(--d) 16%,transparent);transition:.2s}
-.tab.on::before{transform:scale(1.2);box-shadow:0 0 0 4px color-mix(in srgb,var(--d) 28%,transparent)}
-.tab[data-t=my]{--d:#4f6bff}.tab[data-t=all]{--d:#27c6a3}.tab[data-t=ide]{--d:#f5a524}
-.tab[data-t=sy]{--d:#ef5da8}.tab[data-t=lb]{--d:#8b5cf6}.tab[data-t=sp]{--d:#ff7a59}
+.bgc{position:fixed;left:50%;bottom:90px;transform:translate(-50%,20px);background:var(--ink);color:#fff;padding:10px 18px;border-radius:99px;font-weight:700;font-size:14px;opacity:0;pointer-events:none;transition:.3s;z-index:30;max-width:90vw;text-align:center}.bgc.on{opacity:1;transform:translate(-50%,0)}
+.kon{margin-top:22px}
+.modal.emb{display:flex;flex-direction:column;gap:10px;width:min(900px,100%);height:82vh;max-height:96vh;transition:.3s}.modal.emb.wide{width:min(1320px,100%);height:95vh}
+.emb-h{display:flex;gap:10px;align-items:center;justify-content:space-between;flex-wrap:wrap}.emb-h h2{margin:0}.emb-b{display:flex;gap:8px;flex-wrap:wrap}
+.emb-f{flex:1;width:100%;min-height:300px;border:1px solid var(--line);border-radius:16px;background:#fff}
 </style></head><body>
 
 <section id="login"><div style="width:min(380px,100%)"><h1>Kaizen.<br>Perbaikan kecil,<br>dampak besar.</h1>
@@ -158,17 +135,16 @@ body.nav-open{overflow:hidden}
 <button class="btn" id="l_go">Masuk</button><a href="#" id="l_fp">Lupa password?</a><a href="#" id="l_sw">Belum punya akun? Daftar</a><small id="l_h" class="hide" style="color:var(--mut)">Password awal 12345. Kamu akan diminta menggantinya setelah masuk.</small></div></div></section>
 
 <div id="app" class="hide">
-<header><h1>Kaizen</h1><button class="hb" id="hb" type="button" aria-label="Buka menu" aria-expanded="false" aria-controls="nav"><svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path class="hb-o" d="M4 7h16M4 12h16M4 17h16"/><path class="hb-c" d="M6 6l12 12M18 6L6 18"/></svg></button>
+<header><h1><span class="lg">K</span>Kaizen</h1>
+<nav class="tabs"><button class="tab" data-t="my">My Kaizen</button><button class="tab" data-t="all">All Kaizen</button><button class="tab" data-t="ide">Ide Kaizen</button><button class="tab" data-t="sy">Sayembara</button><button class="tab" data-t="lb">Peringkat</button><button class="tab" data-t="sp">Sharing Personal</button></nav>
 <span class="sp"></span><div class="av" id="me" title="My profile"></div></header>
-<nav class="tabs" id="nav" aria-label="Menu utama"><div class="brand"><img src="https://marketingexata.github.io/kontenmarketing/EXATAGROUP.png" alt="Exata Group"></div><button class="tab" data-t="my">My Kaizen</button><button class="tab" data-t="all">All Kaizen</button><button class="tab" data-t="ide">Ide Kaizen</button><button class="tab" data-t="sy">Sayembara</button><button class="tab" data-t="lb">Peringkat</button><button class="tab" data-t="sp">Sharing Personal</button></nav>
-<div class="scrim" id="scrim"></div>
 <main><div id="hd"></div><div id="nt"></div><div id="stats"></div><div class="bar" id="bar"></div><div class="grid" id="grid"></div></main>
 <button class="btn fab" id="fab"></button>
 </div>
 
 <div class="ov" id="ov"><div class="modal" id="md"></div></div>
 <div id="ld"><div class="lb"><div id="lp">0%</div><div class="trk"><div id="lf"></div></div><b>Tunggu ya…</b><div id="lm" style="color:var(--mut);font-size:13px"></div></div></div>
-<div class="zm" id="zm"><div id="zs"><img id="zi" alt="Foto"></div><button class="x zx" onclick="zoomClose()" aria-label="Tutup">✕</button><div class="zc"><button onclick="zoomBy(1/1.4)">−</button><button onclick="zoomReset()">Reset</button><button onclick="zoomBy(1.4)">+</button></div></div>
+<div class="zm" id="zm"><div id="zs"><img loading="lazy" decoding="async" id="zi" alt="Foto"></div><button class="x zx" onclick="zoomClose()" aria-label="Tutup">✕</button><div class="zc"><button onclick="zoomBy(1/1.4)">−</button><button onclick="zoomReset()">Reset</button><button onclick="zoomBy(1.4)">+</button></div></div>
 <div id="toast"></div>
 
 <script>
@@ -197,16 +173,31 @@ function loader(on, msg) {
   else { setP(100); setTimeout(() => $('#ld').classList.remove('on'), 250); }
 }
 function toast(t) { const e = $('#toast'); e.textContent = t; e.classList.add('on'); setTimeout(() => e.classList.remove('on'), 3000); }
-async function api(action, data, msg) {
-  loader(1, msg); let r;
+async function api(action, data, msg, quiet) {
+  if (!quiet) loader(1, msg); let r;
   try { r = await (await fetch(API, { method: 'POST', body: JSON.stringify({ action, token: S.tok, data }) })).json(); }
-  catch (e) { loader(0); toast('Koneksi gagal, coba lagi'); throw e; }
-  loader(0);
+  catch (e) { if (!quiet) loader(0); toast('Koneksi gagal, coba lagi'); throw e; }
+  if (!quiet) loader(0);
   if (!r.ok) { toast(r.error); if (/sesi/i.test(r.error)) logout(); throw new Error(r.error); }
   return r.data;
 }
+/* ---------- kecepatan: simpan di belakang layar ---------- */
+// opt: ubah tampilan dulu (instan), kirim ke server diam-diam, batalkan otomatis kalau gagal
+async function opt(change, render, action, data) {
+  const bak = JSON.stringify([S.cu, S.ko, S.li]);
+  change(); render();
+  try { apply(await api(action, data, '', true)); render(); }
+  catch (e) { [S.cu, S.ko, S.li] = JSON.parse(bak); render(); toast('Gagal tersimpan, perubahan dibatalkan'); throw e; }
+}
+// bg: untuk upload berat (foto): form langsung ditutup, proses jalan di belakang layar dengan penanda kecil
+let BG = 0;
+function chip(msg) { let e = $('#bgc'); if (!e) { e = document.createElement('div'); e.id = 'bgc'; e.className = 'bgc'; document.body.appendChild(e); } if (msg) e.textContent = '⏫ ' + msg + '…'; e.classList.toggle('on', BG > 0); }
+async function bg(action, data, msg) { BG++; chip(msg); try { return await api(action, data, '', true); } finally { BG--; chip(); } }
+window.addEventListener('beforeunload', e => { if (BG) { e.preventDefault(); e.returnValue = ''; } });
 function apply(d) {
-  if (d.token) { S.tok = d.token; localStorage.kz_tok = d.token; } S.me = d.me; S.users = d.users; S.kz = d.kaizen; S.sy = d.sayembara; S.cu = d.curhat || []; S.ko = d.komen || {}; S.li = d.like || {}; normAll(); }
+  if (d.token) { S.tok = d.token; localStorage.kz_tok = d.token; } S.me = d.me; S.users = d.users; S.kz = d.kaizen; S.sy = d.sayembara; S.cu = d.curhat || []; S.ko = d.komen || {}; S.li = d.like || {}; normAll();
+  if (d.kaizen) try { localStorage.kz_cache = JSON.stringify({ tok: S.tok, d: Object.assign({}, d, { token: undefined }) }); } catch (e) { }
+}
 
 /* ---------- login ---------- */
 let REG = false;
@@ -227,28 +218,41 @@ window.onload = () => {
   document.querySelectorAll('.lf input').forEach(i => i.onkeydown = e => { if (e.key === 'Enter') $('#l_go').click(); });
   if (S.tok) boot();
 };
+function show() { $('#login').classList.add('hide'); $('#app').classList.remove('hide'); if (!S.me || !S.me.divisi || S.me.wajibGanti) return profile(true); go(); }
 async function boot() {
+  let c = null; try { c = JSON.parse(localStorage.kz_cache || 'null'); } catch (e) { }
+  if (c && c.tok === S.tok && c.d && c.d.kaizen) { // buka instan dari data terakhir, lalu segarkan diam-diam
+    const raw = JSON.stringify(c.d); apply(c.d); show();
+    api('load', {}, '', true).then(d => { const same = JSON.stringify(d) === raw; apply(d); const a = document.activeElement; if (!same && !$('#ov').classList.contains('on') && !(a && /INPUT|TEXTAREA|SELECT/.test(a.tagName))) go(); }).catch(() => { });
+    return;
+  }
   try { apply(await api('load', {}, 'Mengambil data')); } catch (e) { return; }
-  $('#login').classList.add('hide'); $('#app').classList.remove('hide');
-  if (!S.me.divisi || S.me.wajibGanti) return profile(true);
-  go();
+  show();
 }
-function logout() { localStorage.removeItem('kz_tok'); location.reload(); }
+function logout() { localStorage.removeItem('kz_tok'); localStorage.removeItem('kz_cache'); location.reload(); }
 
 /* ---------- helpers ---------- */
 const U = e => S.users.find(u => u.email === e) || { nama: e, divisi: '', foto: '' };
-const avatar = (u, cls = '') => u.foto ? `<img class="av ${cls}" src="${E(u.foto)}">` : `<div class="av ${cls}">${E((u.nama || '?')[0]).toUpperCase()}</div>`;
+const avatar = (u, cls = '') => u.foto ? `<img loading="lazy" decoding="async" class="av ${cls}" src="${E(u.foto)}">` : `<div class="av ${cls}">${E((u.nama || '?')[0]).toUpperCase()}</div>`;
 const fdate = d => d ? new Date(d + 'T00:00').toLocaleDateString('id-ID', { day: 'numeric', month: 'short', year: 'numeric' }) : '-';
-function img(file, max = 1600) {
+function img(file, max = 1280) {
   return new Promise(res => {
     const fr = new FileReader(); fr.onload = () => { const i = new Image(); i.onload = () => {
       const k = Math.min(1, max / Math.max(i.width, i.height)), c = document.createElement('canvas'); c.width = i.width * k; c.height = i.height * k;
-      c.getContext('2d').drawImage(i, 0, 0, c.width, c.height); res(c.toDataURL('image/jpeg', .8)); }; i.src = fr.result; };
+      c.getContext('2d').drawImage(i, 0, 0, c.width, c.height); res(c.toDataURL('image/jpeg', .72)); }; i.src = fr.result; };
     fr.readAsDataURL(file);
   });
 }
-function modal(h, lock) { $('#md').innerHTML = (lock ? '' : '<button class="x" onclick="close_()" aria-label="Tutup">✕</button>') + h; $('#md').scrollTop = 0; $('#ov').classList.add('on'); }
-function close_() { $('#ov').classList.remove('on'); }
+function modal(h, lock) { $('#md').classList.remove('emb', 'wide'); $('#md').innerHTML = (lock ? '' : '<button class="x" onclick="close_()" aria-label="Tutup">✕</button>') + h; $('#md').scrollTop = 0; $('#ov').classList.add('on'); }
+function close_() { $('#ov').classList.remove('on'); $('#md').classList.remove('emb', 'wide'); }
+const KONTEN_URL = 'https://marketingexata.github.io/konten/';
+function openKonten() {
+  modal(`<div class="emb-h"><h2>🎬 Konten Marketing Exata</h2><div class="emb-b"><button type="button" class="btn g" id="ew">⤢ Perlebar</button><button type="button" class="btn g" id="et">↗ Buka di tab baru</button></div></div>
+<iframe class="emb-f" src="${KONTEN_URL}" title="Konten Marketing Exata" referrerpolicy="no-referrer"></iframe><div class="dr">Kalau halaman tidak tampil di sini, pakai "Buka di tab baru".</div>`);
+  $('#md').classList.add('emb');
+  $('#ew').onclick = () => { const w = $('#md').classList.toggle('wide'); $('#ew').textContent = w ? '⤡ Perkecil' : '⤢ Perlebar'; };
+  $('#et').onclick = () => window.open(KONTEN_URL, '_blank', 'noopener');
+}
 
 /* ---------- tabs, filter, list ---------- */
 const FIELDS = {
@@ -400,13 +404,14 @@ function formMgr(k) {
   ['before', 'after'].forEach(n => { paint(n); $('#p_' + n).onclick = () => { cur = n; $('#fi').click(); }; $('#z_' + n).onclick = () => zoom(im[n]); });
   $('#fi').onchange = async e => { if (e.target.files[0]) { im[cur] = await img(e.target.files[0]); paint(cur); e.target.value = ''; } };
   $('#m_sv').onclick = async () => {
-    const st = $('#m_st').value; apply(await api('saveKaizen', { id: k.id, status: st, before: im.before, after: im.after }, 'Menyimpan status & foto')); close_(); toast('Tersimpan ✓'); go('my'); if (st === 'done') setTimeout(confetti, 350);
+    const st = $('#m_st').value; close_(); go('my');
+    bg('saveKaizen', { id: k.id, status: st, before: im.before, after: im.after }, 'Menyimpan status & foto').then(r => { apply(r); toast('Tersimpan ✓'); go(); if (st === 'done') setTimeout(confetti, 350); }).catch(() => { });
   };
 }
 
 /* ---------- detail (read only) ---------- */
 function view(id) {
-  const k = S.kz.find(x => x.id === id), ph = (s, t) => s ? `<div><label>${t}</label><img src="${E(s)}" data-zoom="${E(s)}" title="Klik untuk perbesar" style="width:100%;border-radius:14px;cursor:zoom-in"></div>` : `<div><label>${t}</label><div class="ph">Belum ada foto</div></div>`;
+  const k = S.kz.find(x => x.id === id), ph = (s, t) => s ? `<div><label>${t}</label><img loading="lazy" decoding="async" src="${E(s)}" data-zoom="${E(s)}" title="Klik untuk perbesar" style="width:100%;border-radius:14px;cursor:zoom-in"></div>` : `<div><label>${t}</label><div class="ph">Belum ada foto</div></div>`;
   modal(`<h2>${E(k.kategori)}</h2>${who(k.email)}${k.masalah ? `<label>Sayembara</label><p>${E(k.masalah)}</p>` : ''}
 <label>Detail kaizen</label><p style="white-space:pre-line">${E(k.isi) || '-'}</p><div class="two"><div><label>Due date</label>${fdate(k.due)}</div><div><label>Status</label>${k.status}</div></div>
 ${(k.pic || k.eksekutor) ? `<label>PIC &amp; Eksekutor</label>${peran(k)}` : ''}${juriBox(k)}
@@ -445,7 +450,8 @@ ${lockSF ? `<div class="nb">🔒 Status dan foto kaizen ini sekarang dipegang <b
   $('#md').oninput = draft;
   $('#sv').onclick = async () => {
     const d = get(); if (!d.divisi || !d.kategori || !d.isi || !d.due) return toast('Divisi, minimal satu kategori, isi, dan tanggal wajib diisi');
-    apply(await api('saveKaizen', d, 'Menyimpan kaizen & mengunggah foto')); localStorage.removeItem(DK()); close_(); toast('Kaizen tersimpan ✓'); go('my'); if (d.status === 'done') setTimeout(confetti, 350);
+    const dk = DK(); close_(); go('my');
+    bg('saveKaizen', d, 'Mengunggah kaizen & foto').then(r => { apply(r); localStorage.removeItem(dk); toast('Kaizen tersimpan ✓'); go(); if (d.status === 'done') setTimeout(confetti, 350); }).catch(() => { toast('Kaizen belum tersimpan. Drafmu aman, buka formnya lagi lalu kirim ulang.'); });
   };
 }
 
@@ -519,22 +525,27 @@ function spList(seen) {
 ${c.jawaban ? `<div class="ans"><b>💬 Jawaban manajemen${c.jawabanNama ? ' · ' + E(c.jawabanNama) : ''}</b> <small>${fdt(c.jawabanTgl)}</small><p>${E(c.jawaban)}</p></div>` : '<div class="dr">Belum ada jawaban. Manajemen akan segera membacanya 💛</div>'}<button type="button" class="btn dn" data-delcu="${c.id}" style="align-self:flex-start">Hapus curhat ini</button></div>`; }).join('')}</div>`
     : `<div class="empty">Belum ada curhat. Kalau ada yang mengganjal, ceritakan ya 💛<br><br><button class="btn" data-sub="new">Mulai curhat</button></div>`;
 }
+const spR = () => { if (S.tab === 'sp') spView(); };
 function spView() {
   const my = S.sub === 'my', n = spNew(), seen = +(localStorage[spKey()] || 0);
-  $('#grid').innerHTML = `<div style="grid-column:1/-1"><div class="spt"><button data-sub="new" class="${my ? '' : 'on'}">✍️ Curhat baru</button><button data-sub="my" class="${my ? 'on' : ''}">💬 Curhatanku (${S.cu.length})${!my && n ? ' 🔔' + n : ''}</button></div>${my ? spList(seen) : spForm()}</div>`;
+  $('#grid').innerHTML = `<div style="grid-column:1/-1"><div class="spt"><button data-sub="new" class="${my ? '' : 'on'}">✍️ Curhat baru</button><button data-sub="my" class="${my ? 'on' : ''}">💬 Curhatanku (${S.cu.length})${!my && n ? ' 🔔' + n : ''}</button></div>${my ? spList(seen) : spForm()}<div class="kon"><button type="button" class="btn g" id="konBtn">🎬 Buka Konten Marketing Exata</button></div></div>`;
   document.querySelectorAll('[data-sub]').forEach(b => b.onclick = () => { S.sub = b.dataset.sub; spView(); });
-  document.querySelectorAll('[data-delcu]').forEach(b => b.onclick = async () => { if (!confirm('Hapus curhat ini? Juri juga tidak akan bisa melihatnya lagi, dan tindakan ini tidak bisa dibatalkan.')) return; apply(await api('deleteCurhat', { id: b.dataset.delcu }, 'Menghapus curhat')); toast('Curhat dihapus'); spView(); });
+  $('#konBtn').onclick = openKonten;
+  document.querySelectorAll('[data-delcu]').forEach(b => b.onclick = async () => { if (!confirm('Hapus curhat ini? Juri juga tidak akan bisa melihatnya lagi, dan tindakan ini tidak bisa dibatalkan.')) return; const id = b.dataset.delcu; opt(() => { S.cu = S.cu.filter(c => c.id !== id); }, spR, 'deleteCurhat', { id }).then(() => toast('Curhat dihapus')).catch(() => { }); });
   if (my) { if (S.cu.length) localStorage[spKey()] = Math.max(0, ...S.cu.map(c => +c.diubah || 0)); document.querySelector('[data-t=sp]').textContent = 'Sharing Personal'; return; }
   const get = () => ({ problem: $('#sp_p').value.trim(), keterangan: $('#sp_k').value.trim() });
   $('.spf').oninput = () => { try { localStorage[spDraft()] = JSON.stringify(get()); $('#sp_dr').textContent = 'Draft tersimpan otomatis ✓'; } catch (e) { } };
   $('#sp_go').onclick = async () => {
     const d = get(); if (!d.problem) return toast('Tulis dulu masalahnya ya 🙂');
-    apply(await api('addCurhat', d, 'Mengirim curhatmu')); localStorage.removeItem(spDraft()); S.sub = 'my'; toast('Curhatmu sudah terkirim 💌'); spView(); confetti();
+    opt(() => { S.cu.unshift({ id: 'tmp' + Date.now(), problem: d.problem.slice(0, 150), keterangan: d.keterangan, status: 'dipelajari', jawaban: '', jawabanNama: '', jawabanTgl: '', dibuat: Date.now(), diubah: Date.now() }); S.sub = 'my'; localStorage.removeItem(spDraft()); }, spR, 'addCurhat', d)
+      .catch(() => { localStorage[spDraft()] = JSON.stringify(d); S.sub = 'new'; spR(); });
+    toast('Curhatmu sudah terkirim 💌'); confetti();
   };
 }
 
 /* ---------- suka (like) & komentar anonim ---------- */
 const sx = id => { const l = S.li[id] || { n: 0, me: false }, c = (S.ko[id] || []).length; return `<button type="button" class="sx ${l.me ? 'on' : ''}" data-dc="${id}" title="Suka & komentar">👍 ${l.n} · 💬 ${c}</button>`; };
+let CUR = '';
 function discuss(id, keep) {
   const k = S.kz.find(x => x.id === id), s = k ? null : S.sy.find(x => x.id === id), o = k || s; if (!o) return;
   const l = S.li[id] || { n: 0, me: false }, cs = S.ko[id] || [], own = o.email === S.me.email;
@@ -543,10 +554,16 @@ function discuss(id, keep) {
 <h3 style="margin-top:18px">Komentar (${cs.length})</h3><div class="cml">${cs.length ? cs.map(c => `<div class="cm ${c.mine ? 'me' : ''}"><b>${c.mine ? 'Kamu 🤫 (hanya kamu yang tahu ini kamu)' : 'Anonim ' + c.a}</b><small>${fdt(c.dibuat)}</small><p>${E(c.teks)}</p>${c.mine ? `<button type="button" class="mr" data-dkm="${c.id}">Hapus komentarku</button>` : ''}</div>`).join('') : '<div class="empty" style="padding:20px 0">Belum ada komentar. Jadilah yang pertama 💬</div>'}</div>
 <label>Tulis komentar (nama kamu disembunyikan dari user lain)</label><textarea id="cmt" maxlength="500" placeholder="Kasih masukan atau semangat yang membangun ya…">${E(keep)}</textarea>
 <div class="act"><button class="btn g" onclick="close_()">Tutup</button><button class="btn" id="cms">Kirim anonim</button></div>`);
-  const again = r => { apply(r); draw(); discuss(id, $('#cmt') ? $('#cmt').value : ''); };
-  $('#dlk').onclick = async () => again(await api('toggleLike', { targetId: id }, 'Menyimpan'));
-  $('#cms').onclick = async () => { const t = $('#cmt').value.trim(); if (!t) return toast('Komentar masih kosong'); apply(await api('addKomen', { targetId: id, teks: t }, 'Mengirim komentar')); draw(); discuss(id); toast('Komentar terkirim (anonim) ✓'); };
-  document.querySelectorAll('[data-dkm]').forEach(b => b.onclick = async () => { if (!confirm('Hapus komentarmu?')) return; apply(await api('deleteKomen', { id: b.dataset.dkm }, 'Menghapus komentar')); draw(); discuss(id, $('#cmt') ? $('#cmt').value : ''); });
+  CUR = id;
+  const rr = () => { draw(); if (CUR === id && $('#cmt') && $('#ov').classList.contains('on')) discuss(id, $('#cmt').value); }; // render ulang hanya jika popup ini masih terbuka
+  $('#dlk').onclick = () => opt(() => { const o = S.li[id] = S.li[id] || { n: 0, me: false }; if (o.me) { o.n--; o.me = false; } else { o.n++; o.me = true; } }, rr, 'toggleLike', { targetId: id }).catch(() => { });
+  $('#cms').onclick = () => {
+    const t = $('#cmt').value.trim(); if (!t) return toast('Komentar masih kosong');
+    const ex = S.ko[id] || [], mine = ex.find(c => c.mine);
+    opt(() => { $('#cmt').value = ''; (S.ko[id] = S.ko[id] || []).push({ id: 'tmp' + Date.now(), teks: t.slice(0, 500), dibuat: Date.now(), mine: true, a: mine ? mine.a : ex.reduce((m, c) => Math.max(m, c.a), 0) + 1 }); }, rr, 'addKomen', { targetId: id, teks: t })
+      .then(() => toast('Komentar terkirim (anonim) ✓')).catch(() => { });
+  };
+  document.querySelectorAll('[data-dkm]').forEach(b => b.onclick = () => { if (!confirm('Hapus komentarmu?')) return; const kid = b.dataset.dkm; opt(() => { S.ko[id] = (S.ko[id] || []).filter(c => c.id !== kid); }, rr, 'deleteKomen', { id: kid }).catch(() => { }); });
 }
 
 function confetti() {
@@ -567,15 +584,4 @@ function profile(first) {
     apply(await api('saveProfile', d, 'Menyimpan profil')); close_(); toast('Profil tersimpan ✓'); go();
   };
 }
-</script><script>
-(function(){
-  var b=document.body,hb=document.getElementById('hb'),mq=matchMedia('(max-width:767px)');
-  function set(o){b.classList.toggle('nav-open',o);hb.setAttribute('aria-expanded',o);hb.setAttribute('aria-label',o?'Tutup menu':'Buka menu')}
-  hb.onclick=function(){set(!b.classList.contains('nav-open'))};
-  document.getElementById('scrim').onclick=function(){set(false)};
-  document.querySelectorAll('.tab').forEach(function(t){t.addEventListener('click',function(){set(false)})});
-  document.addEventListener('keydown',function(e){if(e.key==='Escape')set(false)});
-  mq.addEventListener('change',function(){set(false)});
-})();
-</script>
-</body></html>
+</script></body></html>
